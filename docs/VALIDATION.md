@@ -1,46 +1,54 @@
-# 验证记录
+# Validation record
 
-日期：2026-10-13。本地开发主机为 aarch64 CPU；GPU 验证在独立的 AWS g6.4xlarge / NVIDIA L4 上完成，推理容器限制 4 vCPU、14 GiB 内存。
+English | [简体中文](VALIDATION.zh-CN.md)
 
-| 检查 | 结果 |
+## Public API release
+
+The subsequent authenticated public deployment passed **33 local tests** (one GPU pytest test skipped on the CPU host) and **22 public HTTPS acceptance checks**. Real inference passed 21 parity requests containing 23 judgments and all 160 requests in paced batches at concurrency eight. A deliberate 64-request burst produced nine successes and 55 expected 429 responses, with no 5xx and normal capacity recovery. See the [deployment record](DEPLOYED.md) for the actual endpoint, configuration, latency, and raw evidence.
+
+The sections below preserve the earlier adapter and benchmark validation.
+
+Date: 2026-10-13. Local development used an aarch64 CPU host. GPU validation ran separately on an AWS g6.4xlarge with an NVIDIA L4, with the inference container limited to 4 vCPUs and 14 GiB RAM.
+
+| Check | Result |
 |---|---|
-| 本地自动化测试 | 26 项通过；1 项 pytest GPU 测试因本机缺少 CUDA 而跳过 |
-| Ruff 检查和格式 | 通过 |
-| Python 源码编译 | 通过 |
-| Wheel / 源码包构建 | 通过，插件 entry point 已注册；包内不含模型、凭据或运行缓存 |
-| 真实 v19 LoRA 合并 | 完成，合并 16,819,200 个 adapter 参数 |
-| 导出完整性 | 9 个文件的 SHA-256 校验通过 |
-| 真实权重 CPU 行为对齐 | 21 个请求、23 个判断全部通过 |
-| vLLM GPU 实际加载与对齐 | 完成；21 个真实接口请求、23 个判断通过 |
-| Docker 镜像实际构建 | 完成；基于 vLLM 0.31.0，真实模型启动通过 |
-| GPU 并发吞吐量和延迟 | 已测并发 1、2、4、8、16、32；详见 [并发报告](GPU_CONCURRENCY.md) |
-| 原项目部署切换 | **未进行** |
+| Local automated tests | 26 passed; one pytest GPU test skipped because the local host lacks CUDA |
+| Ruff lint and formatting | Passed |
+| Python source compilation | Passed |
+| Wheel / source distribution build | Passed; plugin entry point registered; packages exclude models, credentials, and runtime caches |
+| Real v19 LoRA merge | Completed; merged 16,819,200 adapter parameters |
+| Export integrity | SHA-256 checks passed for nine files |
+| CPU behavior comparison with real weights | All 21 requests and 23 judgments passed |
+| Actual vLLM GPU loading and comparison | Completed; 21 real API requests and 23 judgments passed |
+| Actual Docker image build | Completed with vLLM 0.31.0; startup with the real model passed |
+| GPU throughput and latency | Measured at concurrency 1, 2, 4, 8, 16, and 32; see the [concurrency report](GPU_CONCURRENCY.md) |
+| Switch of the original deployment | **Not performed** |
 
-## 真实权重 CPU 对齐
+## CPU behavior comparison with real weights
 
-比较双方：
+Compared implementations:
 
-- 参考：固定版本官方 Strands Decider，原始底座 + 原始 LoRA + 原始 Pointer Head。
-- 适配：已合并 LoRA 的真实底座 + 本项目 packed hidden state 处理 + 原始 Pointer Head。
+- Reference: the pinned official Strands Decider implementation, with the original backbone, LoRA, and Pointer Head.
+- Adapter: the real backbone with merged LoRA, this project's packed hidden-state processing, and the original Pointer Head.
 
-底座权重以 BF16 导出，双方使用 FP32 CPU 执行。该检查能验证权重导出、输入位置及决策头适配；**没有运行 vLLM CUDA 内核，不能替代 GPU 对齐测试**。
+Backbone weights were exported in BF16; both implementations ran on the CPU in FP32. This validates weight export, input positions, and the decision-head adapter. **It does not execute vLLM CUDA kernels and cannot replace GPU behavior validation.**
 
-测试包含四个支付场景各五个步骤，共 20 个请求，以及一个含 `choice`、`noul`、`score` 的混合请求。
+The test covers five steps in each of four payment scenarios, giving 20 requests, plus one mixed request containing `choice`, `noul`, and `score`.
 
-| 指标 | 结果 |
+| Metric | Result |
 |---|---:|
-| 请求通过数 | 21 / 21 |
-| 判断数 | 23 |
-| 候选选择相同 | 21 / 21 |
-| 最大概率绝对差 | 0.0032 |
-| 最大置信度绝对差 | 0.0042 |
-| 通过阈值 | 选择相同，概率和置信度差 ≤ 0.02 |
+| Requests passed | 21 / 21 |
+| Judgments | 23 |
+| Matching candidate choices | 21 / 21 |
+| Maximum absolute probability difference | 0.0032 |
+| Maximum absolute confidence difference | 0.0042 |
+| Pass criteria | Same choices; probability and confidence differences ≤ 0.02 |
 
-这衡量适配前后的行为一致性，不是业务准确率，也不表示修正了原模型的判断错误。
+This measures behavioral consistency before and after adaptation. It does not measure business accuracy or show that the original model's decision errors have been corrected.
 
-逐项结果见 [真实权重 CPU 对齐数据](results/local-real-weights.json)；初次 CPU 检查的环境和代码校验值见 [历史检查清单](results/checks.json)。该清单记录 GPU 测试前的状态；最新 GPU 证据见下文。
+See the [per-case CPU results](results/local-real-weights.json) and the [historical check manifest](results/checks.json) for the initial CPU environment and code hashes. That manifest records the state before GPU testing; current GPU evidence is described below.
 
-复现：
+To reproduce:
 
 ```bash
 uv run --no-sync python scripts/validate_local.py \
@@ -51,36 +59,35 @@ uv run --no-sync python scripts/validate_local.py \
   --output artifacts/local-real-weights-rerun.json
 ```
 
-## 自动化测试覆盖
+## Automated test coverage
 
-- 与官方 `evaluate` 实际传给模型的 token、候选位置、温度参数一致。
-- 多线程预处理、超过一个问题分组、窗口超限、官方截断规则。
-- 不同长度、候选数和校准温度的 packed 批处理与独立评分一致。
-- 默认浮点类型改为 BF16 时，校准仍保持 FP32。
-- 多请求并发，唯一请求 ID，结果和问题正确对应。
-- 请求取消、单问题失败、取消接口失败时的清理及容量恢复。
-- HTTP 429、504、断连取消及分块请求体大小限制。
-- 对齐工具检测选择变化；压测不会把缺少判断的 HTTP 200 当作成功。
+- Matches the tokens, candidate positions, and temperature values that official `evaluate` actually passes to the model.
+- Covers multithreaded preprocessing, multiple question groups, context-window overflow, and official truncation rules.
+- Checks packed batches with different lengths, candidate counts, and calibration temperatures against independent scoring.
+- Keeps calibration in FP32 when the default floating-point dtype is BF16.
+- Covers concurrent requests, unique request IDs, and correct association of questions and answers.
+- Checks cleanup and capacity recovery after request cancellation, individual question failure, or cancellation API failure.
+- Covers HTTP 429 and 504, disconnect cancellation, and body-size limits for chunked requests.
+- Detects changed choices; the benchmark does not count an HTTP 200 with missing judgments as a success.
+- Excludes each concurrency level's warmup requests from measured latency statistics.
+- Accepts a decimal difference of exactly 0.02 and rejects 0.0201, avoiding false failures caused by floating-point representation.
 
-- 每档并发预热不进入正式延迟统计。
-- 按十进制阈值接受恰好 0.02 的差异，拒绝 0.0201，避免浮点表示误差导致误报。
+The asynchronous scheduling and HTTP boundary tests use test doubles. The real-weight comparison uses the actual model, without fabricated candidate answers. `tests/test_gpu.py` was skipped on the local CPU host; the separate GPU API tests below actually executed vLLM and CUDA.
 
-其中异步调度和 HTTP 边界测试使用测试替身；真实权重对齐使用实际模型，没有模拟候选答案。`tests/test_gpu.py` 在本地 CPU 环境跳过；下列独立 GPU 接口测试实际执行了 vLLM / CUDA。
+## Real GPU behavior and concurrency
 
-## 真实 GPU 对齐与并发
+The reference service used the original production image pinned by digest. vLLM used the same model with merged LoRA, and each service had exclusive use of the GPU during its run. The production-kernel baseline was not replaced with CPU simulation, random answers, or the helper reference server.
 
-参考服务采用原生产镜像固定 digest；vLLM 使用已合并的同一模型，双方分别独占 GPU。没有用 CPU 模拟、随机答案或辅助参考服务替代生产内核基线。
-
-| GPU 对齐指标 | 结果 |
+| GPU behavior metric | Result |
 |---|---:|
-| 请求 / 判断 | 21 / 23，全部通过 |
-| 最大概率绝对差 | 0.0112 |
-| 最大置信度绝对差 | 0.0150 |
-| 最大 score 绝对差 | 0.0003 |
-| 阈值 | 相同选择；数值绝对差 ≤ 0.02 |
+| Requests / judgments | 21 / 23; all passed |
+| Maximum absolute probability difference | 0.0112 |
+| Maximum absolute confidence difference | 0.0150 |
+| Maximum absolute score difference | 0.0003 |
+| Pass criteria | Same choices; absolute numeric differences ≤ 0.02 |
 
-并发测试原版 480 次全部成功；vLLM 首轮 480 次中有 2 次超时，478 个成功响应的选择均与原版一致。初始工具将 4 条恰好 0.02 的置信度差误报为超标，现已修正浮点边界比较并保留原检查记录，阈值没有放宽。相同推理配置复测 480 次全部成功，全部通过行为对齐；并发下最大概率差 0.0150、最大置信度差 0.0200。
+All 480 original-service requests succeeded. In the first vLLM run, two of 480 requests timed out; all 478 successful responses selected the same candidates as the original. The initial comparison tool incorrectly rejected four confidence differences of exactly 0.02. The floating-point boundary check was corrected, and the original audit was retained; the tolerance was not relaxed. A repeat run with the same inference settings completed all 480 requests successfully and passed all behavior checks. Under concurrency, the maximum probability difference was 0.0150 and the maximum confidence difference was 0.0200.
 
-延长测试在并发 4、8、16、32 各执行 400 次：前 3 档全部成功，并发 32 有 3 次超时。三轮 vLLM 总计 2560 次请求，2555 次成功，成功响应全部通过原版行为对齐；并发 4、8 各累计 560 次均成功。
+The extended run submitted 400 requests at each of concurrency 4, 8, 16, and 32. The first three levels completed without failure; concurrency 32 had three timeouts. Across all three vLLM runs, 2,555 of 2,560 requests succeeded, and every successful response passed comparison against the original. Concurrency levels 4 and 8 each completed a cumulative 560 requests without failure.
 
-详见 [GPU 并发报告](GPU_CONCURRENCY.md) 和 [原始响应、统计及校验清单](results/gpu-concurrency-2026-10-13/verification.json)。本次未将线上演示切换到 vLLM，高并发超时根因仍需定位，不能将本次短测视为生产稳定性保证。
+See the [GPU concurrency report](GPU_CONCURRENCY.md) and the [raw responses, statistics, and verification manifest](results/gpu-concurrency-2026-10-13/verification.json). The live demo was not switched to vLLM. The cause of high-concurrency timeouts still needs investigation, and these short tests do not establish production reliability.

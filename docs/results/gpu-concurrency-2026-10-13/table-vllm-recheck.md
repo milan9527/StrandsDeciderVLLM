@@ -1,4 +1,6 @@
-| 并发 | 请求数 | 成功 RPS | 平均 ms | P50 ms | P95 ms | 失败 |
+English | [简体中文](table-vllm-recheck.zh-CN.md)
+
+| Concurrency | Requests | Successful RPS | Mean ms | P50 ms | P95 ms | Failures |
 |---:|---:|---:|---:|---:|---:|---:|
 | 1 | 80 | 22.55 | 44.3 | 44.3 | 44.8 | 0 |
 | 2 | 80 | 24.29 | 81.8 | 82.2 | 82.8 | 0 |

@@ -1,0 +1,34 @@
+[
+  {
+    "timestamp": 1791882878691,
+    "message": "preprocessing_completed request_id=6e94d11710a14c329a08a16b24544363 questions=3 elapsed_ms=1.19"
+  },
+  {
+    "timestamp": 1791882878691,
+    "message": "engine_submitted request_id=6e94d11710a14c329a08a16b24544363 engine_request_id=465ff4db74fb470f9396b6fcebc09deb input_tokens=168"
+  },
+  {
+    "timestamp": 1791882878691,
+    "message": "engine_submitted request_id=6e94d11710a14c329a08a16b24544363 engine_request_id=1ed7dd4f6b6f411682ed4c9b8bcd7f8c input_tokens=146"
+  },
+  {
+    "timestamp": 1791882878691,
+    "message": "engine_submitted request_id=6e94d11710a14c329a08a16b24544363 engine_request_id=825b37fec2464f60b0d591cc8122df8c input_tokens=164"
+  },
+  {
+    "timestamp": 1791882878738,
+    "message": "engine_completed request_id=6e94d11710a14c329a08a16b24544363 engine_request_id=465ff4db74fb470f9396b6fcebc09deb elapsed_ms=46.92"
+  },
+  {
+    "timestamp": 1791882878779,
+    "message": "engine_completed request_id=6e94d11710a14c329a08a16b24544363 engine_request_id=1ed7dd4f6b6f411682ed4c9b8bcd7f8c elapsed_ms=88.43"
+  },
+  {
+    "timestamp": 1791882878779,
+    "message": "engine_completed request_id=6e94d11710a14c329a08a16b24544363 engine_request_id=825b37fec2464f60b0d591cc8122df8c elapsed_ms=88.48"
+  },
+  {
+    "timestamp": 1791882878780,
+    "message": "{\"event\": \"http_completed\", \"request_id\": \"6e94d11710a14c329a08a16b24544363\", \"method\": \"POST\", \"path\": \"/v1/systemone\", \"status\": 200, \"elapsed_ms\": 91.57}"
+  }
+]

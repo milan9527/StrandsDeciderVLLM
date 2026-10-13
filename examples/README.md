@@ -1,8 +1,11 @@
-# 测试输入
+# Test inputs
 
-- `payment.json`：一个状态、三个独立问题，覆盖 choice / noul / score。
-- `payment-corpus.json`：现有支付演示的优化输入，四场景 × 五步骤，共 20 个独立请求。
+English | [简体中文](README.zh-CN.md)
 
-四个场景为到账待确认、少付补款、退款审批、商户结算。每个请求只有业务事实、问题和候选项，不执行资金交易。
+- `payment.json`: one state and three independent questions, covering choice / noul / score.
+- `payment-corpus.json`: optimized inputs from the payment demo, with four scenarios × five steps, for 20 independent requests.
+- `payment-response.json`: actual response to `payment.json` from the deployed GPU API on 2026-10-13. See [public API usage](../docs/API.md).
 
-20 个输入来自原项目的 `docs/results/concurrency-2026-10-13/corpus.json`，只提取 `model_input`。这些输入用于适配一致性与速度比较，不能据此声称普遍准确率。
+The scenarios are payment awaiting confirmations, underpayment recovery, refund approval, and merchant settlement. Each request contains business facts, a question, and candidate options. These inputs do not execute financial transactions.
+
+The 20 inputs were extracted from `model_input` in the original project's `docs/results/concurrency-2026-10-13/corpus.json`. They measure adaptation consistency and speed; they do not establish general decision accuracy.

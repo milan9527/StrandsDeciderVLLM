@@ -5,11 +5,19 @@ import logging
 from contextlib import asynccontextmanager
 from time import perf_counter
 
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
-from strands_decider.schema import SystemOneRequest
+from fastapi.security import HTTPBearer
+from pydantic import Field
+from strands_decider.schema import SystemOneRequest, SystemOneResponse
+
+from .security import APIKeyMiddleware, RequestTraceMiddleware
 
 logger = logging.getLogger(__name__)
+
+
+class DecisionResponse(SystemOneResponse):
+    latency_ms: float = Field(ge=0, description="Server-side elapsed time, including queuing")
 
 
 class BodyLimit:
@@ -47,8 +55,13 @@ class BodyLimit:
 
 async def run_until_disconnected(request: Request, evaluation):
     async def watch():
-        while not await request.is_disconnected():
-            await asyncio.sleep(0.1)
+        # FastAPI has consumed the complete body before entering this handler.
+        # Wait directly for disconnect instead of polling is_disconnected(),
+        # whose AnyIO CancelScope can swallow cancellation of this watcher.
+        while True:
+            message = await request.receive()
+            if message["type"] == "http.disconnect":
+                return
 
     work, disconnect = asyncio.create_task(evaluation), asyncio.create_task(watch())
     try:
@@ -70,6 +83,9 @@ def create_app(
     timeout_seconds: float = 60,
     max_body_bytes: int = 1024 * 1024,
     warmup: bool = True,
+    api_key: str | None = None,
+    requests_per_minute: int = 1200,
+    rate_limit_burst: int = 16,
 ) -> FastAPI:
     if min(max_pending_requests, timeout_seconds, max_body_bytes) <= 0:
         raise ValueError("HTTP limits must be positive")
@@ -91,8 +107,54 @@ def create_app(
         finally:
             backend.shutdown()
 
-    app = FastAPI(title="Strands Decider · vLLM", version="0.1.0", lifespan=lifespan)
+    app = FastAPI(
+        title="Strands Decider · vLLM",
+        version="0.1.0",
+        description=(
+            "Candidate-based decisions using the Decider v19 Pointer Head on vLLM. "
+            "Supports choice, noul, and score. Supply your API key using Bearer authentication."
+        ),
+        lifespan=lifespan,
+        swagger_ui_parameters={"persistAuthorization": False},
+    )
     app.add_middleware(BodyLimit, max_bytes=max_body_bytes)
+    security = []
+    if api_key is not None:
+        # Added outside BodyLimit so unauthorized callers cannot buffer request bodies.
+        app.add_middleware(
+            APIKeyMiddleware,
+            api_key=api_key,
+            requests_per_minute=requests_per_minute,
+            burst=rate_limit_burst,
+        )
+        security = [Depends(HTTPBearer(auto_error=False, scheme_name="BearerAPIKey"))]
+    app.add_middleware(RequestTraceMiddleware)
+
+    @app.get("/")
+    async def index():
+        return {
+            "service": "Strands Decider vLLM API",
+            "inference": "/v1/systemone",
+            "models": "/v1/models",
+            "docs": "/docs",
+            "authentication": "Bearer API key" if api_key is not None else "disabled",
+        }
+
+    @app.get("/v1/models", dependencies=security)
+    async def models():
+        return {
+            "object": "list",
+            "data": [
+                {
+                    "id": app.state.backend.settings.model_name,
+                    "object": "model",
+                    "owned_by": "strands-decider",
+                    "capabilities": ["choice", "noul", "score"],
+                    "max_context_tokens": 4096,
+                    "endpoint": "/v1/systemone",
+                }
+            ],
+        }
 
     @app.get("/health")
     async def health():
@@ -108,7 +170,18 @@ def create_app(
             "pending_requests": app.state.pending,
         }
 
-    @app.post("/v1/systemone")
+    @app.post(
+        "/v1/systemone",
+        dependencies=security,
+        response_model=DecisionResponse,
+        responses={
+            401: {"description": "Missing or invalid API key"},
+            413: {"description": "Request body exceeds the configured limit"},
+            429: {"description": "Rate or concurrent request limit exceeded"},
+            503: {"description": "Inference engine unavailable"},
+            504: {"description": "Inference timed out and was cancelled"},
+        },
+    )
     async def systemone(payload: SystemOneRequest, request: Request):
         # These operations contain no await and are atomic within one event loop.
         if app.state.pending >= max_pending_requests:

@@ -1,4 +1,6 @@
-| 并发 | 原版 RPS | vLLM RPS | 原版 P50 / P95 ms | vLLM P50 / P95 ms | 失败：原版 / vLLM |
+English | [简体中文](table.zh-CN.md)
+
+| Concurrency | Original RPS | vLLM RPS | Original P50 / P95 ms | vLLM P50 / P95 ms | Failures: original / vLLM |
 |---:|---:|---:|---:|---:|---:|
 | 1 | 14.63 | 22.56 | 68.4 / 69.1 | 44.2 / 45.0 | 0 / 0 |
 | 2 | 14.82 | 24.53 | 134.9 / 135.5 | 81.4 / 81.9 | 0 / 0 |

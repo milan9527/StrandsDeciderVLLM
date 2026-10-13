@@ -59,6 +59,14 @@ def behavior_summary(audit):
     }
 
 
+def write_bilingual_table(path, table, chinese_header):
+    chinese_path = path.with_name(path.stem + ".zh-CN.md")
+    path.write_text(f"English | [简体中文]({chinese_path.name})\n\n" + "\n".join(table) + "\n")
+    chinese_path.write_text(
+        f"[English]({path.name}) | 简体中文\n\n" + "\n".join([chinese_header, *table[1:]]) + "\n"
+    )
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--results", type=Path, required=True)
@@ -99,7 +107,7 @@ def main():
         if (args.results / name).exists():
             shutil.copyfile(args.results / name, args.output / name)
     table = [
-        "| 并发 | 原版 RPS | vLLM RPS | 原版 P50 / P95 ms | vLLM P50 / P95 ms | 失败：原版 / vLLM |",
+        "| Concurrency | Original RPS | vLLM RPS | Original P50 / P95 ms | vLLM P50 / P95 ms | Failures: original / vLLM |",
         "|---:|---:|---:|---:|---:|---:|",
     ]
     for original, vllm in zip(baseline["cells"], candidate["cells"], strict=True):
@@ -130,11 +138,15 @@ def main():
                 path.read_bytes()
             ).hexdigest()
     (args.output / "verification.json").write_text(json.dumps(metadata, indent=2) + "\n")
-    (args.output / "table.md").write_text("\n".join(table) + "\n")
+    write_bilingual_table(
+        args.output / "table.md",
+        table,
+        "| 并发 | 原版 RPS | vLLM RPS | 原版 P50 / P95 ms | vLLM P50 / P95 ms | 失败：原版 / vLLM |",
+    )
     print("\n".join(table))
     for name, (report, _) in extras.items():
         extra_table = [
-            "| 并发 | 请求数 | 成功 RPS | 平均 ms | P50 ms | P95 ms | 失败 |",
+            "| Concurrency | Requests | Successful RPS | Mean ms | P50 ms | P95 ms | Failures |",
             "|---:|---:|---:|---:|---:|---:|---:|",
         ]
         for cell in report["cells"]:
@@ -143,7 +155,11 @@ def main():
                 f"{cell['successful_rps']:.2f} | {cell['mean_ms']:.1f} | "
                 f"{cell['p50_ms']:.1f} | {cell['p95_ms']:.1f} | {cell['failures']} |"
             )
-        (args.output / f"table-{name}.md").write_text("\n".join(extra_table) + "\n")
+        write_bilingual_table(
+            args.output / f"table-{name}.md",
+            extra_table,
+            "| 并发 | 请求数 | 成功 RPS | 平均 ms | P50 ms | P95 ms | 失败 |",
+        )
         print(name + "\n" + "\n".join(extra_table))
 
     import matplotlib

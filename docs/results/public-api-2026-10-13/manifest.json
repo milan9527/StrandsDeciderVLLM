@@ -1,0 +1,23 @@
+{
+  "created_at": "2026-10-13T09:17:22.472398+00:00",
+  "public_api_passed": true,
+  "infrastructure_passed": true,
+  "deployed_source_matches": true,
+  "local_tests": {
+    "passed": 33,
+    "skipped": 1,
+    "skip_reason": "Local workstation has no CUDA GPU; real GPU is tested through HTTPS."
+  },
+  "lint_and_format": "passed",
+  "sha256": {
+    "gpu.csv": "ab154815c09923f6563da7df6ad346893f9f516eb02611bfed900e1fadbbfa41",
+    "host-verification.txt": "e8e948b8503f2cd3626cafddfb348f04e22ae104cd34d1005b05fe8be3792230",
+    "infrastructure-verification.json": "dc5a03db3e1dec1651105a14ef81d98172a80763800a2d184b39021f02301033",
+    "model-integrity.json": "630ff5dc88f1b71b664077d4b5680d771cfce2ef7cbeb268f847704bf143a10d",
+    "registry-digests.json": "1d5eddce2efd82529711495044d39d3a8effafc593b41ce7da6f4aaa3e64d2d7",
+    "request-trace.json": "a3f8108add5dd25f6834a873ccece23377a59a7f2767ab0e976bc70abfd0749f",
+    "requests.jsonl": "afc0071dd81e382b4b1ee438d7990c51055cbd5b375267c19f0efc2d6a2569e3",
+    "source-sha256.json": "d3ab5ceda0359ffd38e6949f8895062857ac467a5f3ece9961383594a8990c90",
+    "verification.json": "8fe3cddca547460810ddcef6c8fbf7f1dc82c7f000b95bf09e9551d863c20ab7"
+  }
+}

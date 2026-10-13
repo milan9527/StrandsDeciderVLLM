@@ -1,0 +1,60 @@
+{
+  "created_at": "2026-10-13T09:14:58.380650+00:00",
+  "endpoint": "https://d1e9udi8st2p3g.cloudfront.net",
+  "passed": true,
+  "checks": {
+    "health": true,
+    "interactive_docs": true,
+    "documented_bearer_auth": true,
+    "documented_response": true,
+    "no_key_rejected": true,
+    "bad_key_rejected": true,
+    "authentication_before_validation": true,
+    "models_require_auth": true,
+    "model_listing": true,
+    "invalid_input_rejected": true,
+    "oversized_input_rejected": true,
+    "https_required": true,
+    "unauthenticated_response_not_cached": true,
+    "capacity_recovered": true,
+    "all_primitives_passed": true,
+    "concurrency_8_passed": true,
+    "overload_rejected": true,
+    "overload_no_server_errors": true,
+    "overload_retry_after": true,
+    "successful_choices_match": true,
+    "responses_not_cached": true,
+    "unique_request_ids": true
+  },
+  "phases": {
+    "parity": {
+      "requests": 21,
+      "status_counts": {
+        "200": 21
+      },
+      "mean_client_ms": 58.74587823581394,
+      "p50_client_ms": 56.22097599552944,
+      "p95_client_ms": 70.88124001165852
+    },
+    "overload": {
+      "requests": 64,
+      "status_counts": {
+        "429": 55,
+        "200": 9
+      },
+      "mean_client_ms": 269.0220649981509,
+      "p50_client_ms": 286.7674200097099,
+      "p95_client_ms": 319.96333599090576
+    },
+    "concurrency_8": {
+      "requests": 160,
+      "status_counts": {
+        "200": 160
+      },
+      "mean_client_ms": 219.4813324320421,
+      "p50_client_ms": 243.30061601358466,
+      "p95_client_ms": 251.00171699887142
+    }
+  },
+  "method": "Public HTTPS; 21 original-reference cases, overload burst, paced batches at concurrency 8"
+}

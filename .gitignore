@@ -9,6 +9,7 @@ dist/
 build/
 models/
 artifacts/
+.deployment/
 .env
 .env.*
 !.env.example

@@ -1,0 +1,37 @@
+{
+  "created_at": "2026-10-13T09:16:16.026875+00:00",
+  "passed": true,
+  "checks": {
+    "instance_running": true,
+    "on_demand_g6_xlarge": true,
+    "only_expected_security_group": true,
+    "private_origin_ingress_only": true,
+    "public_origin_port_unreachable": true,
+    "imdsv2_required": true,
+    "imdsv2_hop_limit_one": true,
+    "s3_public_access_blocked": true,
+    "s3_encrypted": true,
+    "cloudfront_deployed": true,
+    "cloudfront_enabled": true,
+    "https_only": true,
+    "caching_disabled": true,
+    "authorization_forwarded": true,
+    "image_saved_in_private_ecr": true,
+    "credentials_owner_only": true,
+    "credentials_gitignored": true,
+    "original_gpu_still_running": true
+  },
+  "endpoint": "https://d1e9udi8st2p3g.cloudfront.net",
+  "region": "us-east-1",
+  "instance_type": "g6.xlarge",
+  "availability_zone": "us-east-1d",
+  "instance_id": "i-0ae7eb0abcb815af3",
+  "image_digests": [
+    {
+      "digest": "sha256:0bd44d374991dc8782b93d58bb41b3aab63fa0d242149578b342cb139f371d07",
+      "tags": [
+        "service-20261013T091125Z"
+      ]
+    }
+  ]
+}

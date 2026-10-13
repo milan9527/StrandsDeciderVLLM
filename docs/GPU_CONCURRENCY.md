@@ -1,14 +1,18 @@
-# GPU 并发实测
+# GPU concurrency benchmark
 
-2026-10-13，比较原部署 Decider 镜像和本项目的 vLLM 适配。两者使用相同 v19 模型、相同输入，分别独占同一块 NVIDIA L4 GPU。
+English | [简体中文](GPU_CONCURRENCY.zh-CN.md)
 
-**vLLM 已实现真实并发提速，当前配置建议先使用并发 4–8。** 并发 8 的吞吐量约为原版的 2.36 倍，P95 降低约 56%。提高到 16、32 没有继续提升吞吐量，且高并发测试中累计发生 5 次约 60 秒的超时，根因尚未确定。
+This report preserves the original benchmark. A later [public API release](DEPLOYED.md) adds authentication, conservative admission limits, request tracing, and an HTTP disconnect-watcher fix, with separate HTTPS verification. Its measurements must not be combined with this benchmark.
 
-## 对比结果
+On 2026-10-13, we compared the original deployed Decider image with this project's vLLM adapter. Both used the same v19 model and inputs, with exclusive use of the same NVIDIA L4 GPU during their respective runs.
 
-以下为相同配置的第二轮 vLLM 测量与原版基线，每档均 80 次，启动和预热已排除。本轮全部成功；首轮及延长测试的失败见后文，没有将失败从原始数据中删除。
+**vLLM delivers measured concurrency gains. Start with concurrency 4–8 under the current settings.** At concurrency 8, throughput was about 2.36 times the original service's, and P95 latency fell by about 56%. Increasing concurrency to 16 or 32 did not improve throughput further. Five requests timed out after approximately 60 seconds across the higher-concurrency tests; their root cause remains unresolved.
 
-| 并发 | 原版 RPS | vLLM RPS | 原版 P50 / P95 ms | vLLM P50 / P95 ms |
+## Comparison results
+
+The table compares the second vLLM run, using unchanged inference settings, with the original baseline. Each level contains 80 requests, excluding startup and warmup. This run completed without failures. Failures from the initial and extended runs are reported below and remain in the raw evidence.
+
+| Concurrency | Original RPS | vLLM RPS | Original P50 / P95 ms | vLLM P50 / P95 ms |
 |---:|---:|---:|---:|---:|
 | 1 | 14.63 | 22.55 | 68.4 / 69.1 | 44.3 / 44.8 |
 | 2 | 14.82 | 24.29 | 134.9 / 135.5 | 82.2 / 82.8 |
@@ -17,73 +21,73 @@
 | 16 | 14.75 | 30.15 | 1082.0 / 1084.4 | 526.7 / 549.9 |
 | 32 | 14.73 | 30.64 | 2160.0 / 2168.4 | 1013.8 / 1094.6 |
 
-![相同配置复测：吞吐量和延迟](results/gpu-concurrency-2026-10-13/concurrency.png)
+![Repeat run with unchanged settings: throughput and latency](results/gpu-concurrency-2026-10-13/concurrency.png)
 
-原版约 14.7 RPS，增加并发主要增加串行排队。vLLM 单请求耗时从约 68 ms 降到 44 ms，并能通过批处理减少并发请求的排队。当前收益同时涉及 LoRA 合并、不同 PyTorch / CUDA 内核、CPU 线程设置和调度，不能全部归因于批处理。
+The original service sustains about 14.7 RPS; additional concurrency mainly increases serial queuing. vLLM reduces single-request latency from about 68 ms to 44 ms and uses batching to reduce queuing for concurrent requests. These gains include LoRA merging, different PyTorch / CUDA kernels, CPU thread settings, and scheduling, so they cannot be attributed entirely to batching.
 
-`max_num_seqs=32` 是上限，并不表示任意 32 条输入都能同时处理；8192 token 的批次预算也会限制调度。当前配置在并发 4–8 附近已到吞吐平台，更多请求会继续排队。这里的 RPS 是单次决策请求吞吐量，不是每秒完成的支付业务流程数。
+`max_num_seqs=32` is a limit, not a guarantee that any 32 inputs can be processed together. The 8192-token batch budget also constrains scheduling. With these settings, throughput plateaus around concurrency 4–8, and additional requests continue to queue. RPS here means individual decision requests per second, not complete payment workflows per second.
 
-## 超时与延长测试
+## Timeouts and the extended run
 
-首轮 vLLM 在并发 16 的 80 次请求中有 2 次超时，整档耗时 61.08 秒，成功吞吐量降至 **1.28 RPS**；其他档位成功。相同配置复测 480 次全部成功，随后将并发 4、8、16、32 各延长到 400 次：
+In the initial vLLM run, two of 80 requests at concurrency 16 timed out. That level took 61.08 seconds overall, reducing successful throughput to **1.28 RPS**. All other levels completed successfully. A repeat run with the same settings completed all 480 requests, followed by an extended run with 400 requests at each of concurrency 4, 8, 16, and 32:
 
-| 并发 | 成功 / 总请求 | 成功 RPS | 平均 ms | P50 ms | P95 ms | 超时 |
+| Concurrency | Successful / total requests | Successful RPS | Mean ms | P50 ms | P95 ms | Timeouts |
 |---:|---:|---:|---:|---:|---:|---:|
 | 4 | 400 / 400 | 33.31 | 119.9 | 119.9 | 126.7 | 0 |
 | 8 | 400 / 400 | 34.93 | 228.5 | 230.1 | 233.2 | 0 |
 | 16 | 400 / 400 | 30.21 | 528.3 | 528.8 | 542.9 | 0 |
 | 32 | 397 / 400 | 6.44 | 943.7 | 940.7 | 1040.3 | 3 |
 
-**延迟分位数只统计成功请求，超时仍计入失败数和整档耗时。** 因此并发 32 的成功请求 P95 约 1 秒，但 3 次约 60 秒的超时仍将成功吞吐量拉低到 6.44 RPS，不能只看 P95 就认为该档位正常。
+**Latency percentiles include successful requests only. Timeouts still count as failures and contribute to the level's total elapsed time.** At concurrency 32, successful requests therefore have a P95 of about one second, while three roughly 60-second timeouts reduce successful throughput to 6.44 RPS. P95 alone would hide the problem at that level.
 
-三轮 vLLM 共 **2560 次正式请求，2555 次成功、5 次超时**。每个并发 4、8 档位累计测了 560 次，没有失败。三轮测量没有改变推理引擎配置；未定位的偶发超时不能解释为“冷启动已修复”，也不能据此给出生产 SLA。
+The three vLLM runs contain **2,560 measured requests: 2,555 successes and five timeouts**. Concurrency levels 4 and 8 each completed 560 requests without failure. Inference-engine settings remained unchanged across the three runs. The unresolved intermittent timeouts cannot be described as a fixed cold-start issue, and these measurements do not establish a production SLA.
 
-行为方面，所有 **2555 个成功响应的候选选择均与原版一致**，概率与置信度也满足 0.02 阈值。初始检查有 4 条置信度差恰好为 0.02，被浮点表示 `0.020000000000000018` 误报，修正后重新检查；原始误报记录保留在 `vllm-concurrency/behavior-audit-before-float-fix.json`。这项修正没有改变模型答案或放宽阈值，也没有把超时变成成功。
+For behavior, **all 2,555 successful responses selected the same candidates as the original service**, with probability and confidence differences within the 0.02 tolerance. The initial audit incorrectly rejected four confidence differences of exactly 0.02 because their floating-point representation was `0.020000000000000018`. The comparison was corrected and rerun; the original audit remains in `vllm-concurrency/behavior-audit-before-float-fix.json`. This correction did not change model answers, relax the tolerance, or turn timeouts into successes.
 
-本轮结论支持继续以并发 4–8 做集成测试。切换线上前仍需定位超时，并测长输入、长时间持续负载、多问题请求和原 ECS 后端的并发限制。
+These results support further integration testing at concurrency 4–8. Before switching production traffic, investigate the timeouts and test longer inputs, sustained load, requests containing multiple questions, and the existing ECS backend's concurrency limits.
 
-数据：[首轮完整对比](results/gpu-concurrency-2026-10-13/table.md) · [同配置复测](results/gpu-concurrency-2026-10-13/table-vllm-recheck.md) · [延长测试](results/gpu-concurrency-2026-10-13/table-vllm-extended.md) · [校验清单与逐条响应](results/gpu-concurrency-2026-10-13/verification.json)。
+Evidence: [full initial comparison](results/gpu-concurrency-2026-10-13/table.md) · [repeat with unchanged settings](results/gpu-concurrency-2026-10-13/table-vllm-recheck.md) · [extended run](results/gpu-concurrency-2026-10-13/table-vllm-extended.md) · [verification manifest and per-request evidence](results/gpu-concurrency-2026-10-13/verification.json).
 
-## 测试条件
+## Test conditions
 
-| 项目 | 设置 |
+| Item | Configuration |
 |---|---|
-| AWS | us-east-1，临时 On-Demand `g6.4xlarge` |
-| GPU | NVIDIA L4，24 GB 级显存，驱动 595.91.07 |
-| 推理资源 | 每个服务均限制 CPU affinity `0–3`、内存 14 GiB |
-| 压测客户端 | 同主机、独立容器，CPU `4–5`、内存 4 GiB |
-| 原版 | 原生产镜像固定 digest，官方 Decider + PyTorch + FLA，串行执行 |
-| vLLM | 0.31.0，合并 LoRA，BF16 底座，原始 FP32 Pointer Head |
-| vLLM 调度 | `max_num_seqs=32`、`max_num_batched_tokens=8192`、显存比例 0.7 |
-| CPU 线程 | 原版保留 `OMP_NUM_THREADS=4`；vLLM 按启动建议使用 1 |
-| 其他 | 单 GPU；关闭 CUDA Graph、前缀缓存、分块预填充 |
-| 请求 | `POST /v1/systemone`，回环 HTTP，包含输入处理、排队、推理及响应 |
-| 并发档位 | 1、2、4、8、16、32 |
-| 输入 | 四个支付场景 × 五个步骤，共 20 个不同的单问题请求 |
-| 输入长度 | 304–445 token，平均 373.9 token |
-| 首轮 / 复测 | 每档 80 次，每个输入重复 4 次；每轮 480 次正式请求 |
-| 延长测试 | 并发 4、8、16、32，每档 400 次；共 1600 次 |
-| 预热 | 每档先按该并发执行 `max(20, 2 × 并发)` 次；六档测量排除 176 次，四档延长测试排除 136 次 |
+| AWS | us-east-1; temporary On-Demand `g6.4xlarge` |
+| GPU | NVIDIA L4, 24 GB class VRAM, driver 595.91.07 |
+| Inference resources | Each service limited to CPU affinity `0–3` and 14 GiB RAM |
+| Load generator | Separate container on the same host; CPUs `4–5`, 4 GiB RAM |
+| Original service | Original production image pinned by digest; official Decider + PyTorch + FLA; serial execution |
+| vLLM | 0.31.0, merged LoRA, BF16 backbone, original FP32 Pointer Head |
+| vLLM scheduling | `max_num_seqs=32`, `max_num_batched_tokens=8192`, GPU memory utilization 0.7 |
+| CPU threads | Original retains `OMP_NUM_THREADS=4`; vLLM uses 1, as recommended at startup |
+| Other settings | Single GPU; CUDA Graphs, prefix caching, and chunked prefill disabled |
+| Request path | `POST /v1/systemone` over loopback HTTP; includes input processing, queuing, inference, and response delivery |
+| Concurrency levels | 1, 2, 4, 8, 16, 32 |
+| Inputs | Four payment scenarios × five steps; 20 distinct single-question requests |
+| Input length | 304–445 tokens; mean 373.9 tokens |
+| Initial / repeat run | 80 requests per level, each input repeated four times; 480 measured requests per run |
+| Extended run | Concurrency 4, 8, 16, 32; 400 requests per level, 1,600 total |
+| Warmup | Before each level, `max(20, 2 × concurrency)` requests at that concurrency; 176 excluded for six-level runs and 136 for the four-level extended run |
 
-`g6.xlarge` 和 `g6.2xlarge` 在尝试的可用区容量不足，因此使用同为单卡 L4 的 `g6.4xlarge` 并限制推理容器资源。主机仍是 g6.4xlarge，不能将数据称为 g6.xlarge 的直接实测。客户端使用额外 CPU；若迁移至只有 4 vCPU 的实例，应从其他主机发压并重新验证。
+`g6.xlarge` and `g6.2xlarge` lacked capacity in the availability zones attempted. We therefore used a `g6.4xlarge`, which also has a single L4, and restricted inference-container resources. The host was still a g6.4xlarge, so these are not direct g6.xlarge measurements. The client used additional CPUs; when moving to a host with only four vCPUs, generate load from another machine and validate again.
 
-两个实现按顺序测量，避免抢占 GPU。模型启动、镜像构建及预热不计入正式性能。测量不经过 CloudFront、ECS API、DynamoDB 或公网，因此不能与原演示网站的完整请求耗时直接比较。
+The two implementations were measured sequentially to avoid GPU contention. Model startup, image construction, and warmups are excluded. Requests did not pass through CloudFront, the ECS API, DynamoDB, or the public internet, so these results are not directly comparable with end-to-end latency in the original demo website.
 
-## 统计和行为校验
+## Statistics and behavior checks
 
-固定数量客户端 worker 持续提交请求，完成一个再提交下一个；这是压测负载方式，与支付业务的“自主闭环”无关。RPS 为成功请求数 / 整档耗时；P50、P95 使用成功请求延迟的 nearest-rank 分位数。P95 表示该档 95% 的成功请求延迟不高于此值。
+A fixed number of client workers continuously submit requests, each sending its next request after the previous one finishes. This is the load-generation method, separate from the payment demo's autonomous business workflow. RPS is successful requests divided by the total elapsed time for that level. P50 and P95 use nearest-rank percentiles of successful-request latency. P95 is the latency at or below which 95% of successful requests completed.
 
-先从原版捕获四场景 20 个请求和一个包含 `choice`、`noul`、`score` 的混合请求，共 21 个请求、23 个判断；再与 vLLM 实际响应比较。随后对每条正式压测响应按 case ID 与原版捕获结果核对：
+First, we captured original-service responses for the 20 scenario requests and one mixed request containing `choice`, `noul`, and `score`: 21 requests and 23 judgments. These were compared with actual vLLM responses. Every measured benchmark response was then matched by case ID against the captured original response:
 
-- `choice` 必须选择相同候选 ID。
-- 概率、置信度、`noul` 及 `score` 数值绝对偏差不超过 0.02。
-- HTTP 200 还需通过问题完整性、候选 ID 和概率合法性检查。
+- `choice` must select the same candidate ID.
+- Absolute differences in probabilities, confidence, `noul`, and `score` must not exceed 0.02.
+- An HTTP 200 must also pass checks for complete questions, valid candidate IDs, and valid probabilities.
 
-重复请求用于观察并发下是否出现结果串线或数值变化，不代表新增了 480 个独立业务样本。原版和适配版一致也不代表业务决策正确；引擎适配没有修改权重或纠正原模型错误。
+Repeated requests test for cross-request mix-ups or numerical changes under concurrency; they do not add 480 independent business examples. Matching the original service does not establish business correctness. The engine adaptation did not train new weights or correct the original model's errors.
 
-## 复现
+## Reproduction
 
-导出模型和构建镜像见 [README](../README.md)。实际 vLLM 测量配置：
+See the [README](../README.md) for model export and image construction. The measured vLLM configuration was:
 
 ```bash
 docker run --rm --gpus all --shm-size=2g \
@@ -96,7 +100,7 @@ docker run --rm --gpus all --shm-size=2g \
   --max-num-batched-tokens 8192
 ```
 
-原版必须使用已固定的生产模型镜像；`scripts/reference_server.py` 只作行为参考，其内核栈不同，不能替代该性能基线。分别启动、采集、关闭原版和 vLLM，避免同时占用 GPU：
+Use the pinned production model image for the original service. `scripts/reference_server.py` is a behavior reference only; its different kernel stack cannot replace this performance baseline. Start, capture, and stop each service separately to avoid simultaneous GPU use:
 
 ```bash
 python scripts/gpu_experiment.py capture \
@@ -113,7 +117,7 @@ python scripts/gpu_experiment.py audit \
   --requests artifacts/reference-concurrency/requests.jsonl \
   --output artifacts/reference-concurrency/behavior-audit.json
 
-# 关闭原版，启动 vLLM 后，使用新输出路径采集并压测。
+# Stop the original service, start vLLM, and use new output paths.
 python scripts/gpu_experiment.py capture \
   --url http://127.0.0.1:8100 \
   --corpus examples/payment-corpus.json --mixed examples/payment.json \
@@ -133,10 +137,10 @@ python scripts/gpu_experiment.py audit \
   --output artifacts/vllm-concurrency/behavior-audit.json
 ```
 
-采集脚本额外预热 21 次并单独记录，性能统计只取 `benchmark.json` 和正式 `requests.jsonl`。报告脚本 `scripts/report_gpu_concurrency.py` 从逐条数据复算统计，并生成图表及 SHA-256 清单。
+The capture script separately records 21 additional warmup requests. Performance statistics use only `benchmark.json` and the measured `requests.jsonl`. `scripts/report_gpu_concurrency.py` recomputes statistics from per-request evidence and generates charts and SHA-256 manifests.
 
-## 资源收尾
+## Resource cleanup
 
-2026-10-13 08:27 UTC 已确认临时 EC2 终止，EBS 磁盘、临时 S3 bucket、IAM role / instance profile 和安全组均已删除。结果已下载到本项目。原生产 g6.xlarge 仍在运行，演示网站返回 HTTP 200，本次未切换线上流量或推送 GitHub。
+At 08:27 UTC on 2026-10-13, the temporary EC2 instance was confirmed terminated. Its EBS volume, temporary S3 bucket, IAM role / instance profile, and security group had all been deleted. Results were downloaded to this project. At the end of that test batch, the original production g6.xlarge remained running, the demo website returned HTTP 200, and no production traffic switch or GitHub push had been performed as part of the benchmark.
 
-清理确认见 [cleanup.json](results/gpu-concurrency-2026-10-13/cleanup.json)，本地 26 项测试、代码检查及源码哈希见 [local-checks.json](results/gpu-concurrency-2026-10-13/local-checks.json)。
+See [cleanup.json](results/gpu-concurrency-2026-10-13/cleanup.json) for cleanup verification and [local-checks.json](results/gpu-concurrency-2026-10-13/local-checks.json) for the 26 passing local tests, code checks, and source hashes.

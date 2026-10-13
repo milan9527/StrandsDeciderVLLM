@@ -1,6 +1,7 @@
 import argparse
 import asyncio
 import json
+import logging
 from pathlib import Path
 
 
@@ -24,6 +25,11 @@ def main():
     serve.add_argument("--max-pending-requests", type=int, default=32)
     serve.add_argument("--timeout-seconds", type=float, default=60)
     serve.add_argument("--allow-truncation", action="store_true")
+    serve.add_argument(
+        "--api-key-file", type=Path, help="Enable Bearer authentication using a local secret file"
+    )
+    serve.add_argument("--requests-per-minute", type=int, default=1200)
+    serve.add_argument("--rate-limit-burst", type=int, default=16)
     validation = commands.add_parser("validate", help="Compare real original and vLLM endpoints")
     validation.add_argument("--reference-url", required=True)
     validation.add_argument("--candidate-url", required=True)
@@ -53,6 +59,14 @@ def main():
         from .backend import RuntimeSettings, create_backend
         from .server import create_app
 
+        api_key = None
+        if args.api_key_file is not None:
+            api_key = args.api_key_file.read_text().strip()
+            if len(api_key) < 32 or any(character.isspace() for character in api_key):
+                parser.error(
+                    "API key file must contain a key of at least 32 characters without whitespace"
+                )
+        logging.basicConfig(level=logging.INFO, format="%(message)s")
         settings = RuntimeSettings(
             model=args.model,
             max_num_seqs=args.max_num_seqs,
@@ -65,6 +79,9 @@ def main():
             lambda: create_backend(settings),
             max_pending_requests=args.max_pending_requests,
             timeout_seconds=args.timeout_seconds,
+            api_key=api_key,
+            requests_per_minute=args.requests_per_minute,
+            rate_limit_burst=args.rate_limit_burst,
         )
         uvicorn.run(app, host=args.host, port=args.port, workers=1, access_log=False)
     elif args.command == "validate":

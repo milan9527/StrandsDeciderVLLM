@@ -1,0 +1,39 @@
+{
+  "model": "strands-decider-2B-hobson-v19-vllm",
+  "answers": {
+    "action": {
+      "type": "choice",
+      "choice": "await_confirmations",
+      "probabilities": {
+        "await_confirmations": 0.9106,
+        "credit_payment": 0.0809,
+        "manual_review": 0.0085
+      },
+      "confidence": 0.8659
+    },
+    "confirmed": {
+      "type": "noul",
+      "noul": 0.3204
+    },
+    "readiness": {
+      "type": "score",
+      "score": 1.2983,
+      "legend": {
+        "0": "Payment is missing or has a risk flag.",
+        "1": "Payment was received but still needs confirmations.",
+        "2": "Payment is received and sufficiently confirmed."
+      },
+      "probabilities": {
+        "0": 0.1106,
+        "1": 0.4804,
+        "2": 0.4089
+      },
+      "confidence": 0.5028
+    }
+  },
+  "usage": {
+    "input_tokens": 478,
+    "output_tokens": 3
+  },
+  "latency_ms": 90.79
+}

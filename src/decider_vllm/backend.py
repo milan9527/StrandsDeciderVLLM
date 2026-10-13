@@ -6,6 +6,7 @@ import logging
 import math
 import uuid
 from dataclasses import dataclass
+from time import perf_counter
 
 from strands_decider.schema import SystemOneResponse, Usage
 from transformers import AutoTokenizer
@@ -13,6 +14,7 @@ from transformers import AutoTokenizer
 from . import VLLM_VERSION, register
 from .artifacts import load_config
 from .preprocessing import Preprocessor
+from .security import request_id as http_request_id
 
 logger = logging.getLogger(__name__)
 
@@ -41,6 +43,13 @@ class DecisionBackend:
     async def _question(self, question):
         async with self.slots:
             request_id = uuid.uuid4().hex
+            started = perf_counter()
+            logger.info(
+                "engine_submitted request_id=%s engine_request_id=%s input_tokens=%d",
+                http_request_id.get(),
+                request_id,
+                len(question.token_ids),
+            )
             params = self.params_factory(
                 task="classify",
                 skip_reading_prefix_cache=True,
@@ -53,7 +62,14 @@ class DecisionBackend:
                 ):
                     if result.finished:
                         output = result.outputs.data
-            except BaseException:
+            except BaseException as error:
+                logger.warning(
+                    "engine_interrupted request_id=%s engine_request_id=%s error_type=%s elapsed_ms=%.2f",
+                    http_request_id.get(),
+                    request_id,
+                    type(error).__name__,
+                    (perf_counter() - started) * 1000,
+                )
                 # Also clean up if validation/transport fails after scheduling.
                 try:
                     await asyncio.wait_for(self.engine.abort(request_id), timeout=2)
@@ -69,10 +85,24 @@ class DecisionBackend:
                 or abs(sum(probabilities) - 1) > 1e-4
             ):
                 raise RuntimeError("vLLM returned an invalid candidate probability vector")
-            return self.preprocessor.answer(question, probabilities)
+            answer = self.preprocessor.answer(question, probabilities)
+            logger.info(
+                "engine_completed request_id=%s engine_request_id=%s elapsed_ms=%.2f",
+                http_request_id.get(),
+                request_id,
+                (perf_counter() - started) * 1000,
+            )
+            return answer
 
     async def evaluate(self, request):
+        started = perf_counter()
         prepared = await asyncio.to_thread(self.preprocessor.prepare, request)
+        logger.info(
+            "preprocessing_completed request_id=%s questions=%d elapsed_ms=%.2f",
+            http_request_id.get(),
+            len(prepared),
+            (perf_counter() - started) * 1000,
+        )
         tasks = [asyncio.create_task(self._question(q)) for q in prepared]
         try:
             answers = await asyncio.gather(*tasks)

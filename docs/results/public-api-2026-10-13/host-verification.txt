@@ -1,0 +1,11 @@
+enabled
+enabled
+active
+active
+{"Status":"healthy","FailingStreak":0,"Log":[{"Start":"2026-10-13T09:12:27.743335205Z","End":"2026-10-13T09:12:27.785571954Z","ExitCode":0,"Output":""},{"Start":"2026-10-13T09:12:57.786379942Z","End":"2026-10-13T09:12:57.82701648Z","ExitCode":0,"Output":""},{"Start":"2026-10-13T09:13:27.828191129Z","End":"2026-10-13T09:13:27.86711285Z","ExitCode":0,"Output":""},{"Start":"2026-10-13T09:13:57.868246711Z","End":"2026-10-13T09:13:57.907927279Z","ExitCode":0,"Output":""},{"Start":"2026-10-13T09:14:27.909496618Z","End":"2026-10-13T09:14:27.949398643Z","ExitCode":0,"Output":""}]}
+Image=sha256:0bd44d374991dc8782b93d58bb41b3aab63fa0d242149578b342cb139f371d07 RestartCount=0
+name, driver_version, memory.total [MiB], memory.used [MiB]
+NVIDIA L4, 595.91.07, 23034 MiB, 15512 MiB
+600 /opt/decider-secrets/api-key
+{'cli.py': 'de74f60b61a3cc09b7c793054ad9b219f9ae0eb51ad0ccdcadc95b559c8b1e5a', '__init__.py': '40b6b0c0f7464ed8d9d9cd5b28d38c09dfcc4479ffbc75c30ea01bfa5bccb34f', 'pointer.py': 'a1a5408fbfe6fc9d76cc9c4725b8d99e702cc28e431dc32720aca1035bc94926', 'export.py': '1b54b5f5a1e7a547a3d0bc3f651074242ace0f84e258838965e6d4d272fe342d', 'security.py': 'a6940f5dd3f0de2597426d8a16584e5dcc2904001da135ba9379ff86684c8a0a', 'backend.py': '611f0e64f748d4cd9840e00b89f2cd33c77294634bc3ea3a72723046b29cf940', 'vllm_model.py': '9bb4a2cb53dc3cdce61cd42ed2959ec8b9a0477b8d5863a58438e986084de661', 'artifacts.py': '239780f4f6cac749a983b6a38ba6c5d0998d3199d5492d33d36b1d812c00221d', 'server.py': '2fd0ab493e962f22ddba89cbcccd23e1d078e046fd18d1271f90f317d25296dc', 'preprocessing.py': 'b48b5293912027b2336ce66deb506b506dcaadef58e82aaa89803bc0f601594e', 'evaluation.py': 'f795664a1f2c60b02fada298750a55d4d1c01d3a49356ade47d2ae96362b1e49'}
+{"status":"ok","engine":"vllm","model":"strands-decider-2B-hobson-v19-vllm","pending_requests":0}
