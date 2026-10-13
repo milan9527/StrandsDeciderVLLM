@@ -1,0 +1,60 @@
+{
+  "created_at": "2026-10-13T06:29:37.910671+00:00",
+  "environment": {
+    "architecture": "aarch64",
+    "python": "3.11.14",
+    "packages": {
+      "torch": "2.7.1",
+      "transformers": "5.17.0",
+      "peft": "0.21.0",
+      "strands-decider": "0.0.0",
+      "fastapi": "0.136.3",
+      "pytest": "9.1.1"
+    }
+  },
+  "unit_tests": {
+    "passed": 24,
+    "skipped": 1,
+    "failed": 0,
+    "skipped_reason": "Real vLLM GPU test requires CUDA and DECIDER_VLLM_GPU_MODEL"
+  },
+  "checks": {
+    "ruff": "passed",
+    "compileall": "passed",
+    "wheel_build": "passed",
+    "sdist_build": "passed",
+    "model_integrity": "9 files verified",
+    "original_application_code_unchanged": true
+  },
+  "gpu_vllm_executed": false,
+  "gpu_performance_measured": false,
+  "docker_build_executed": false,
+  "code_sha256": {
+    "Dockerfile": "c056a8b87902c674ed6382259934be1b740fc05f4a7020b5c247d217629f1753",
+    "examples/payment-corpus.json": "55fb81ec8ad913195ef277388ca08f545f50cbb58f09544f17fec183937e00b7",
+    "examples/payment.json": "226e4f99241bfeff76d1ce0528e43016becb684159f44c6ecc183c2b04fb4c5c",
+    "pyproject.toml": "ee71061d3df86425dc4786cd6055017c34d8483e5d44bdb3daad0697cfd67fc8",
+    "scripts/reference_server.py": "a378c4acc98e393966b106b14cc11cec2b402c7d3844d8d79c73c6e0b64a9a02",
+    "scripts/validate_local.py": "0199f089ecdee6e9b09674ba983381384611f085e6550f6b71a8e854d823b1f8",
+    "src/decider_vllm/__init__.py": "40b6b0c0f7464ed8d9d9cd5b28d38c09dfcc4479ffbc75c30ea01bfa5bccb34f",
+    "src/decider_vllm/artifacts.py": "239780f4f6cac749a983b6a38ba6c5d0998d3199d5492d33d36b1d812c00221d",
+    "src/decider_vllm/backend.py": "e585515e5c300cfbf28bf9baf5e1c0e1639386c984a46a7dcc388932869d3a53",
+    "src/decider_vllm/cli.py": "dd503f8362cedaec1e8b6337609c4bc80118b79dfc76ab09ad6952127cb452af",
+    "src/decider_vllm/evaluation.py": "eaabe63df665dc03a4f4181eec304dafbd14ba3912475d3f37f1bd1e2d1d9551",
+    "src/decider_vllm/export.py": "1b54b5f5a1e7a547a3d0bc3f651074242ace0f84e258838965e6d4d272fe342d",
+    "src/decider_vllm/pointer.py": "a1a5408fbfe6fc9d76cc9c4725b8d99e702cc28e431dc32720aca1035bc94926",
+    "src/decider_vllm/preprocessing.py": "b48b5293912027b2336ce66deb506b506dcaadef58e82aaa89803bc0f601594e",
+    "src/decider_vllm/server.py": "a4631189ed137e90d71f071c072c41f264ed38935bdccf8d104efdbf76ff2611",
+    "src/decider_vllm/vllm_model.py": "9bb4a2cb53dc3cdce61cd42ed2959ec8b9a0477b8d5863a58438e986084de661",
+    "tests/conftest.py": "ace9c5a50691524ad7115c99b2ace76961d9d3826a636bd5002862f9119cd3ca",
+    "tests/test_backend.py": "850c581224b7e5c8a2fdd698e424d4c01ba839b96f51485ccd86fb25ea0b8665",
+    "tests/test_evaluation.py": "45d793ff69bae43a9af819e7339c1b8f9e7a4be63839cc0cc4362fc4c80fa24f",
+    "tests/test_gpu.py": "e8f24e448bb84214464fb530df1c8e42f3cfbf6b031ad65b5fcb07bf283e1d43",
+    "tests/test_pointer.py": "7a5294f28a2d111b1cbc24c341ad917f7fb38b5cfe1da0e56917ade3b59d5ab3",
+    "tests/test_preprocessing.py": "cb3cc9a31a8cceda37873afbcf618d93e678d2fd0b30248199914e796ba27df3",
+    "tests/test_server.py": "ca9f7b90ba146b732fc3213119333842d5a429d87174d89569c833e4368c45aa",
+    "uv.lock": "a5754f90eae26bb6c6dc38041338eec2f5b988f1e16339f7d20d630ee4515425"
+  },
+  "real_weights_report_sha256": "b7ae9379c38cec72b0afdaf265c530ff0f5827d49b12f6682beb4eb724667f3f",
+  "export_manifest_sha256": "8b1f417277d08f374e4eab1b3cc8e3884439293ca3c84c6baf8a0a1688546922"
+}

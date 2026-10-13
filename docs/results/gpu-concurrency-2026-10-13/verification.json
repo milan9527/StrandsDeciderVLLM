@@ -1,0 +1,80 @@
+{
+  "reference_requests": 480,
+  "vllm_requests": 480,
+  "reference_behavior_passed": 480,
+  "vllm_behavior_passed": 478,
+  "reference_behavior": {
+    "passed": true,
+    "passed_requests": 480,
+    "same_choices": 480,
+    "choice_judgments": 480,
+    "max_probability_difference": 0.0,
+    "max_confidence_difference": 0.0
+  },
+  "vllm_behavior": {
+    "passed": false,
+    "passed_requests": 478,
+    "same_choices": 478,
+    "choice_judgments": 478,
+    "max_probability_difference": 0.015000000000000013,
+    "max_confidence_difference": 0.020000000000000018
+  },
+  "additional_runs": {
+    "vllm-recheck": {
+      "passed": true,
+      "passed_requests": 480,
+      "same_choices": 480,
+      "choice_judgments": 480,
+      "max_probability_difference": 0.015000000000000013,
+      "max_confidence_difference": 0.020000000000000018
+    },
+    "vllm-extended": {
+      "passed": false,
+      "passed_requests": 1597,
+      "same_choices": 1597,
+      "choice_judgments": 1597,
+      "max_probability_difference": 0.015000000000000013,
+      "max_confidence_difference": 0.020000000000000018
+    }
+  },
+  "gpu_parity": {
+    "passed": true,
+    "passed_cases": 21,
+    "cases": 21
+  },
+  "sha256": {
+    "cpu-hardware.json": "fabb86a7f4e12b600de4c069626bc2c59f29521d97070068493bbd5576800de4",
+    "experiment-manifest.json": "771038a2e4e6c892be9f2d17235b5ebd4f38f9cf68c4814025f0cbdf9a60f654",
+    "gpu-hardware.csv": "149117da19d5118e3b39239a066238faa3c143388dc792f5ff52c30e4b2c8095",
+    "gpu-parity.json": "82f531a327e542056d2541fb8d2aaa4e020a59dcac1d9e7c9d50b1100625bbba",
+    "installed-code-sha256.json": "fb483def43151b831c1c2995a0088d507d700a8d6fb670e9a5f832f140dc3a37",
+    "reference-capture.json": "b68548a3359d87cf62b2717f1375d87d41247b8cb9c91eefaf58b10ab834c427",
+    "reference-concurrency/behavior-audit.json": "b761981b10a541678aa9a4d4179d8abafd456eedaced430388141600d34580c7",
+    "reference-concurrency/benchmark.json": "587e98d7a70280a4a5078c27e73b62a3b033b0815656350663405af35f251853",
+    "reference-concurrency/requests.jsonl": "8429791ad691189f88bbff9d13403a825e1054bbbd722ea4c4404b3976673f43",
+    "reference-concurrency/warmups.jsonl": "334604df82087e8a67503761e60dd3f9b29098abbddeb6dfb865965202391bb9",
+    "reference-gpu.csv": "0d1dfe0a5ccf45e8f662dc7bbf2a3d401dfe44d37f7566653d54c3cbcf85512a",
+    "reference-health.json": "c15b30a67d17e8f661a244b64545820c7b2ffe5c83b84dc560c8d32a228bc532",
+    "reference-runtime.json": "d5911cb6a499527748ed5b015be67fbc37ff7f1f71cb73b0cc52bbc435bb55cd",
+    "runtime-metadata.json": "7fc5e7392457f7c252cc9e35f79fb72db664471e219a46d30a9a3322716ebc73",
+    "vllm-capture.json": "10fb036208289cdaa024967dc93f3456e9e385b24abb72fafbbb3d150b4a40c4",
+    "vllm-concurrency/behavior-audit-before-float-fix.json": "12fec6c116a6bc0dd86938596dde1dd04b54c759fc5ab1f73bdc13fc6fb43293",
+    "vllm-concurrency/behavior-audit.json": "f1836ed6a8b44376b35454eb5566b042e4399777fbd7e625f38e0e1d44657052",
+    "vllm-concurrency/benchmark.json": "a437004e0d13f7b9030d6c6386b7c602111d2fffc9d0925c1bdec0a9da13efcf",
+    "vllm-concurrency/requests.jsonl": "f19de0d4b024a5a3814c25c5dcf499c0428a69cbf2794608e5204aa367cf57ef",
+    "vllm-concurrency/warmups.jsonl": "cf28f3aec223150a1f031a14615cd3b09b4c03d90044c629be36e0e0ef519c99",
+    "vllm-extended/behavior-audit.json": "854fa7f1834880559dc2ac415a26d9fe22b8b15b701ebc11d61d9ea815254513",
+    "vllm-extended/benchmark.json": "a90ca19b9e3dc3ba7667ee4b18cb747d2fccd76300306915bfba48cfd4e55ce8",
+    "vllm-extended/requests.jsonl": "57268b694f17b61530cfaf96e8a0482b7ba45df279ae2fde046454c09a66a1e0",
+    "vllm-extended/warmups.jsonl": "9bc2dc29b307994aeb885e4e2921beff274fd60eee8c7d529f1009ea6b1e212b",
+    "vllm-final-health.json": "eeaae0d27c7c704952734e7d220769d52f1136c5bc53e60a4769d6a0ea82e499",
+    "vllm-gpu.csv": "fe93ae5492cc4a257d91cafc903817ba5da49bb1788b7bc10eaf3f5f68705db5",
+    "vllm-health.json": "eeaae0d27c7c704952734e7d220769d52f1136c5bc53e60a4769d6a0ea82e499",
+    "vllm-recheck/behavior-audit.json": "dd1b4adc2c7cfa03fdd40d6d06792f7bbc02b16275159bb1caf6864facea2797",
+    "vllm-recheck/benchmark.json": "b17bb9b4f73b6c38404cd802e2ebc282c404730cdab4f35b99e21baa522b7c86",
+    "vllm-recheck/requests.jsonl": "beaf7e04497a702191f4f64bb2a3baf8200364d79b1101392ebbae3eaa5d35e3",
+    "vllm-recheck/warmups.jsonl": "a83ae58f0c459795ad3338c7dba074e8b2a458937e316303c535818b1b19543c",
+    "cleanup.json": "2e6637e9504fc6de12438683f73ce0afd5ba79e01f344d2e382b8c523986a79d",
+    "local-checks.json": "62ac64281fc95fbba32995c4a237c264b7bb18b35b2cf5cb6f355f6f598ad02a"
+  }
+}

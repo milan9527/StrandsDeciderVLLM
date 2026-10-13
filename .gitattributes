@@ -1,0 +1,5 @@
+# Matplotlib writes multiline SVG path data with trailing spaces.
+*.svg -whitespace
+
+# Keep collected benchmark evidence out of source-code language statistics.
+docs/results/** linguist-generated=true

@@ -1,0 +1,777 @@
+{
+  "created_at": "2026-10-13T08:14:39.381974+00:00",
+  "tolerance": 0.02,
+  "passed": true,
+  "passed_cases": 21,
+  "cases": 21,
+  "results": [
+    {
+      "id": "pending/intake",
+      "passed": true,
+      "questions": {
+        "action": {
+          "passed": true,
+          "reference": {
+            "type": "choice",
+            "choice": "payment_support",
+            "probabilities": {
+              "payment_support": 0.9556,
+              "refund_support": 0.0174,
+              "merchant_ops": 0.027
+            },
+            "confidence": 0.9334
+          },
+          "candidate": {
+            "type": "choice",
+            "choice": "payment_support",
+            "probabilities": {
+              "payment_support": 0.9566,
+              "refund_support": 0.0169,
+              "merchant_ops": 0.0265
+            },
+            "confidence": 0.9349
+          },
+          "max_probability_difference": 0.0010000000000000009,
+          "confidence_difference": 0.0014999999999999458,
+          "same_choice": true
+        }
+      }
+    },
+    {
+      "id": "pending/verify",
+      "passed": true,
+      "questions": {
+        "action": {
+          "passed": true,
+          "reference": {
+            "type": "choice",
+            "choice": "await_confirmations",
+            "probabilities": {
+              "await_confirmations": 0.8824,
+              "request_topup": 0.0341,
+              "payment_verified": 0.0422,
+              "settlement_delayed": 0.0163,
+              "settlement_pending": 0.0184,
+              "settlement_verified": 0.0066
+            },
+            "confidence": 0.8589
+          },
+          "candidate": {
+            "type": "choice",
+            "choice": "await_confirmations",
+            "probabilities": {
+              "await_confirmations": 0.883,
+              "request_topup": 0.0342,
+              "payment_verified": 0.0418,
+              "settlement_delayed": 0.0161,
+              "settlement_pending": 0.0183,
+              "settlement_verified": 0.0066
+            },
+            "confidence": 0.8596
+          },
+          "max_probability_difference": 0.0006000000000000449,
+          "confidence_difference": 0.0007000000000000339,
+          "same_choice": true
+        }
+      }
+    },
+    {
+      "id": "pending/approve",
+      "passed": true,
+      "questions": {
+        "action": {
+          "passed": true,
+          "reference": {
+            "type": "choice",
+            "choice": "approved",
+            "probabilities": {
+              "risk_review": 0.0624,
+              "verify_destination": 0.021,
+              "await_approval": 0.1639,
+              "approved": 0.7526
+            },
+            "confidence": 0.6701
+          },
+          "candidate": {
+            "type": "choice",
+            "choice": "approved",
+            "probabilities": {
+              "risk_review": 0.062,
+              "verify_destination": 0.0215,
+              "await_approval": 0.1672,
+              "approved": 0.7493
+            },
+            "confidence": 0.6658
+          },
+          "max_probability_difference": 0.0033000000000000806,
+          "confidence_difference": 0.0043000000000000815,
+          "same_choice": true
+        }
+      }
+    },
+    {
+      "id": "pending/execute",
+      "passed": true,
+      "questions": {
+        "action": {
+          "passed": true,
+          "reference": {
+            "type": "choice",
+            "choice": "hold",
+            "probabilities": {
+              "hold": 0.7641,
+              "credit_order": 0.0971,
+              "refund_payment": 0.027,
+              "escalate_settlement": 0.0287,
+              "wait_settlement": 0.0684,
+              "reconcile_settlement": 0.0146
+            },
+            "confidence": 0.7169
+          },
+          "candidate": {
+            "type": "choice",
+            "choice": "hold",
+            "probabilities": {
+              "hold": 0.7655,
+              "credit_order": 0.099,
+              "refund_payment": 0.0276,
+              "escalate_settlement": 0.0283,
+              "wait_settlement": 0.0649,
+              "reconcile_settlement": 0.0147
+            },
+            "confidence": 0.7186
+          },
+          "max_probability_difference": 0.003500000000000003,
+          "confidence_difference": 0.0017000000000000348,
+          "same_choice": true
+        }
+      }
+    },
+    {
+      "id": "pending/close",
+      "passed": true,
+      "questions": {
+        "action": {
+          "passed": true,
+          "reference": {
+            "type": "choice",
+            "choice": "follow_up",
+            "probabilities": {
+              "resolve": 0.1069,
+              "follow_up": 0.8931
+            },
+            "confidence": 0.7862
+          },
+          "candidate": {
+            "type": "choice",
+            "choice": "follow_up",
+            "probabilities": {
+              "resolve": 0.1103,
+              "follow_up": 0.8897
+            },
+            "confidence": 0.7795
+          },
+          "max_probability_difference": 0.0034000000000000002,
+          "confidence_difference": 0.006700000000000039,
+          "same_choice": true
+        }
+      }
+    },
+    {
+      "id": "underpaid/intake",
+      "passed": true,
+      "questions": {
+        "action": {
+          "passed": true,
+          "reference": {
+            "type": "choice",
+            "choice": "payment_support",
+            "probabilities": {
+              "payment_support": 0.9598,
+              "refund_support": 0.0161,
+              "merchant_ops": 0.0241
+            },
+            "confidence": 0.9397
+          },
+          "candidate": {
+            "type": "choice",
+            "choice": "payment_support",
+            "probabilities": {
+              "payment_support": 0.961,
+              "refund_support": 0.0158,
+              "merchant_ops": 0.0233
+            },
+            "confidence": 0.9415
+          },
+          "max_probability_difference": 0.0011999999999999789,
+          "confidence_difference": 0.0018000000000000238,
+          "same_choice": true
+        }
+      }
+    },
+    {
+      "id": "underpaid/verify",
+      "passed": true,
+      "questions": {
+        "action": {
+          "passed": true,
+          "reference": {
+            "type": "choice",
+            "choice": "await_confirmations",
+            "probabilities": {
+              "await_confirmations": 0.8448,
+              "request_topup": 0.1004,
+              "payment_verified": 0.0195,
+              "settlement_delayed": 0.0117,
+              "settlement_pending": 0.016,
+              "settlement_verified": 0.0076
+            },
+            "confidence": 0.8138
+          },
+          "candidate": {
+            "type": "choice",
+            "choice": "await_confirmations",
+            "probabilities": {
+              "await_confirmations": 0.8423,
+              "request_topup": 0.1022,
+              "payment_verified": 0.0196,
+              "settlement_delayed": 0.012,
+              "settlement_pending": 0.0163,
+              "settlement_verified": 0.0076
+            },
+            "confidence": 0.8108
+          },
+          "max_probability_difference": 0.0024999999999999467,
+          "confidence_difference": 0.0030000000000000027,
+          "same_choice": true
+        }
+      }
+    },
+    {
+      "id": "underpaid/approve",
+      "passed": true,
+      "questions": {
+        "action": {
+          "passed": true,
+          "reference": {
+            "type": "choice",
+            "choice": "approved",
+            "probabilities": {
+              "risk_review": 0.1355,
+              "verify_destination": 0.0268,
+              "await_approval": 0.1439,
+              "approved": 0.6938
+            },
+            "confidence": 0.5917
+          },
+          "candidate": {
+            "type": "choice",
+            "choice": "approved",
+            "probabilities": {
+              "risk_review": 0.1297,
+              "verify_destination": 0.0258,
+              "await_approval": 0.1395,
+              "approved": 0.705
+            },
+            "confidence": 0.6067
+          },
+          "max_probability_difference": 0.011199999999999988,
+          "confidence_difference": 0.015000000000000013,
+          "same_choice": true
+        }
+      }
+    },
+    {
+      "id": "underpaid/execute",
+      "passed": true,
+      "questions": {
+        "action": {
+          "passed": true,
+          "reference": {
+            "type": "choice",
+            "choice": "hold",
+            "probabilities": {
+              "hold": 0.7913,
+              "credit_order": 0.1287,
+              "refund_payment": 0.0253,
+              "escalate_settlement": 0.0211,
+              "wait_settlement": 0.0186,
+              "reconcile_settlement": 0.015
+            },
+            "confidence": 0.7496
+          },
+          "candidate": {
+            "type": "choice",
+            "choice": "hold",
+            "probabilities": {
+              "hold": 0.7886,
+              "credit_order": 0.1304,
+              "refund_payment": 0.0254,
+              "escalate_settlement": 0.0213,
+              "wait_settlement": 0.0191,
+              "reconcile_settlement": 0.0153
+            },
+            "confidence": 0.7463
+          },
+          "max_probability_difference": 0.0027000000000000357,
+          "confidence_difference": 0.0033000000000000806,
+          "same_choice": true
+        }
+      }
+    },
+    {
+      "id": "underpaid/close",
+      "passed": true,
+      "questions": {
+        "action": {
+          "passed": true,
+          "reference": {
+            "type": "choice",
+            "choice": "follow_up",
+            "probabilities": {
+              "resolve": 0.1284,
+              "follow_up": 0.8716
+            },
+            "confidence": 0.7432
+          },
+          "candidate": {
+            "type": "choice",
+            "choice": "follow_up",
+            "probabilities": {
+              "resolve": 0.1305,
+              "follow_up": 0.8695
+            },
+            "confidence": 0.7389
+          },
+          "max_probability_difference": 0.0021000000000000185,
+          "confidence_difference": 0.0042999999999999705,
+          "same_choice": true
+        }
+      }
+    },
+    {
+      "id": "refund/intake",
+      "passed": true,
+      "questions": {
+        "action": {
+          "passed": true,
+          "reference": {
+            "type": "choice",
+            "choice": "refund_support",
+            "probabilities": {
+              "payment_support": 0.0359,
+              "refund_support": 0.9421,
+              "merchant_ops": 0.022
+            },
+            "confidence": 0.9132
+          },
+          "candidate": {
+            "type": "choice",
+            "choice": "refund_support",
+            "probabilities": {
+              "payment_support": 0.0358,
+              "refund_support": 0.9424,
+              "merchant_ops": 0.0218
+            },
+            "confidence": 0.9136
+          },
+          "max_probability_difference": 0.00029999999999996696,
+          "confidence_difference": 0.00039999999999995595,
+          "same_choice": true
+        }
+      }
+    },
+    {
+      "id": "refund/verify",
+      "passed": true,
+      "questions": {
+        "action": {
+          "passed": true,
+          "reference": {
+            "type": "choice",
+            "choice": "payment_verified",
+            "probabilities": {
+              "await_confirmations": 0.3085,
+              "request_topup": 0.0334,
+              "payment_verified": 0.6222,
+              "settlement_delayed": 0.0096,
+              "settlement_pending": 0.0151,
+              "settlement_verified": 0.0112
+            },
+            "confidence": 0.5467
+          },
+          "candidate": {
+            "type": "choice",
+            "choice": "payment_verified",
+            "probabilities": {
+              "await_confirmations": 0.306,
+              "request_topup": 0.0322,
+              "payment_verified": 0.6274,
+              "settlement_delayed": 0.0092,
+              "settlement_pending": 0.0145,
+              "settlement_verified": 0.0107
+            },
+            "confidence": 0.5529
+          },
+          "max_probability_difference": 0.005199999999999982,
+          "confidence_difference": 0.006199999999999983,
+          "same_choice": true
+        }
+      }
+    },
+    {
+      "id": "refund/approve",
+      "passed": true,
+      "questions": {
+        "action": {
+          "passed": true,
+          "reference": {
+            "type": "choice",
+            "choice": "approved",
+            "probabilities": {
+              "risk_review": 0.0746,
+              "verify_destination": 0.2235,
+              "await_approval": 0.2625,
+              "approved": 0.4393
+            },
+            "confidence": 0.2524
+          },
+          "candidate": {
+            "type": "choice",
+            "choice": "approved",
+            "probabilities": {
+              "risk_review": 0.0772,
+              "verify_destination": 0.2229,
+              "await_approval": 0.2609,
+              "approved": 0.439
+            },
+            "confidence": 0.252
+          },
+          "max_probability_difference": 0.002600000000000005,
+          "confidence_difference": 0.00040000000000001146,
+          "same_choice": true
+        }
+      }
+    },
+    {
+      "id": "refund/execute",
+      "passed": true,
+      "questions": {
+        "action": {
+          "passed": true,
+          "reference": {
+            "type": "choice",
+            "choice": "hold",
+            "probabilities": {
+              "hold": 0.6884,
+              "credit_order": 0.1696,
+              "refund_payment": 0.0912,
+              "escalate_settlement": 0.0147,
+              "wait_settlement": 0.014,
+              "reconcile_settlement": 0.0222
+            },
+            "confidence": 0.626
+          },
+          "candidate": {
+            "type": "choice",
+            "choice": "hold",
+            "probabilities": {
+              "hold": 0.6907,
+              "credit_order": 0.1694,
+              "refund_payment": 0.0901,
+              "escalate_settlement": 0.0148,
+              "wait_settlement": 0.0137,
+              "reconcile_settlement": 0.0213
+            },
+            "confidence": 0.6288
+          },
+          "max_probability_difference": 0.0022999999999999687,
+          "confidence_difference": 0.0028000000000000247,
+          "same_choice": true
+        }
+      }
+    },
+    {
+      "id": "refund/close",
+      "passed": true,
+      "questions": {
+        "action": {
+          "passed": true,
+          "reference": {
+            "type": "choice",
+            "choice": "follow_up",
+            "probabilities": {
+              "resolve": 0.2025,
+              "follow_up": 0.7975
+            },
+            "confidence": 0.595
+          },
+          "candidate": {
+            "type": "choice",
+            "choice": "follow_up",
+            "probabilities": {
+              "resolve": 0.202,
+              "follow_up": 0.798
+            },
+            "confidence": 0.5959
+          },
+          "max_probability_difference": 0.000500000000000056,
+          "confidence_difference": 0.0009000000000000119,
+          "same_choice": true
+        }
+      }
+    },
+    {
+      "id": "settlement/intake",
+      "passed": true,
+      "questions": {
+        "action": {
+          "passed": true,
+          "reference": {
+            "type": "choice",
+            "choice": "merchant_ops",
+            "probabilities": {
+              "payment_support": 0.0519,
+              "refund_support": 0.0074,
+              "merchant_ops": 0.9407
+            },
+            "confidence": 0.9111
+          },
+          "candidate": {
+            "type": "choice",
+            "choice": "merchant_ops",
+            "probabilities": {
+              "payment_support": 0.0529,
+              "refund_support": 0.0075,
+              "merchant_ops": 0.9397
+            },
+            "confidence": 0.9095
+          },
+          "max_probability_difference": 0.0010000000000000009,
+          "confidence_difference": 0.0016000000000000458,
+          "same_choice": true
+        }
+      }
+    },
+    {
+      "id": "settlement/verify",
+      "passed": true,
+      "questions": {
+        "action": {
+          "passed": true,
+          "reference": {
+            "type": "choice",
+            "choice": "settlement_delayed",
+            "probabilities": {
+              "await_confirmations": 0.0198,
+              "request_topup": 0.0056,
+              "payment_verified": 0.0044,
+              "settlement_delayed": 0.9439,
+              "settlement_pending": 0.0225,
+              "settlement_verified": 0.0037
+            },
+            "confidence": 0.9327
+          },
+          "candidate": {
+            "type": "choice",
+            "choice": "settlement_delayed",
+            "probabilities": {
+              "await_confirmations": 0.0201,
+              "request_topup": 0.0058,
+              "payment_verified": 0.0045,
+              "settlement_delayed": 0.9437,
+              "settlement_pending": 0.0221,
+              "settlement_verified": 0.0038
+            },
+            "confidence": 0.9325
+          },
+          "max_probability_difference": 0.0003999999999999976,
+          "confidence_difference": 0.00019999999999997797,
+          "same_choice": true
+        }
+      }
+    },
+    {
+      "id": "settlement/approve",
+      "passed": true,
+      "questions": {
+        "action": {
+          "passed": true,
+          "reference": {
+            "type": "choice",
+            "choice": "approved",
+            "probabilities": {
+              "risk_review": 0.0938,
+              "verify_destination": 0.0172,
+              "await_approval": 0.1856,
+              "approved": 0.7034
+            },
+            "confidence": 0.6045
+          },
+          "candidate": {
+            "type": "choice",
+            "choice": "approved",
+            "probabilities": {
+              "risk_review": 0.0935,
+              "verify_destination": 0.0171,
+              "await_approval": 0.1861,
+              "approved": 0.7033
+            },
+            "confidence": 0.6044
+          },
+          "max_probability_difference": 0.0005000000000000004,
+          "confidence_difference": 9.999999999998899e-05,
+          "same_choice": true
+        }
+      }
+    },
+    {
+      "id": "settlement/execute",
+      "passed": true,
+      "questions": {
+        "action": {
+          "passed": true,
+          "reference": {
+            "type": "choice",
+            "choice": "escalate_settlement",
+            "probabilities": {
+              "hold": 0.0722,
+              "credit_order": 0.0126,
+              "refund_payment": 0.0045,
+              "escalate_settlement": 0.8913,
+              "wait_settlement": 0.0155,
+              "reconcile_settlement": 0.0039
+            },
+            "confidence": 0.8695
+          },
+          "candidate": {
+            "type": "choice",
+            "choice": "escalate_settlement",
+            "probabilities": {
+              "hold": 0.0738,
+              "credit_order": 0.0127,
+              "refund_payment": 0.0045,
+              "escalate_settlement": 0.8892,
+              "wait_settlement": 0.0159,
+              "reconcile_settlement": 0.0039
+            },
+            "confidence": 0.867
+          },
+          "max_probability_difference": 0.0020999999999999908,
+          "confidence_difference": 0.0025000000000000577,
+          "same_choice": true
+        }
+      }
+    },
+    {
+      "id": "settlement/close",
+      "passed": true,
+      "questions": {
+        "action": {
+          "passed": true,
+          "reference": {
+            "type": "choice",
+            "choice": "follow_up",
+            "probabilities": {
+              "resolve": 0.1769,
+              "follow_up": 0.8231
+            },
+            "confidence": 0.6463
+          },
+          "candidate": {
+            "type": "choice",
+            "choice": "follow_up",
+            "probabilities": {
+              "resolve": 0.1835,
+              "follow_up": 0.8165
+            },
+            "confidence": 0.6331
+          },
+          "max_probability_difference": 0.00660000000000005,
+          "confidence_difference": 0.01319999999999999,
+          "same_choice": true
+        }
+      }
+    },
+    {
+      "id": "mixed-primitives",
+      "passed": true,
+      "questions": {
+        "action": {
+          "passed": true,
+          "reference": {
+            "type": "choice",
+            "choice": "await_confirmations",
+            "probabilities": {
+              "await_confirmations": 0.9145,
+              "credit_payment": 0.0772,
+              "manual_review": 0.0083
+            },
+            "confidence": 0.8717
+          },
+          "candidate": {
+            "type": "choice",
+            "choice": "await_confirmations",
+            "probabilities": {
+              "await_confirmations": 0.9106,
+              "credit_payment": 0.0809,
+              "manual_review": 0.0085
+            },
+            "confidence": 0.8659
+          },
+          "max_probability_difference": 0.0039000000000000146,
+          "confidence_difference": 0.005800000000000027,
+          "same_choice": true
+        },
+        "confirmed": {
+          "passed": true,
+          "reference": {
+            "type": "noul",
+            "noul": 0.3232
+          },
+          "candidate": {
+            "type": "noul",
+            "noul": 0.3204
+          },
+          "max_probability_difference": 0.002799999999999969
+        },
+        "readiness": {
+          "passed": true,
+          "reference": {
+            "type": "score",
+            "score": 1.2986,
+            "legend": {
+              "0": "Payment is missing or has a risk flag.",
+              "1": "Payment was received but still needs confirmations.",
+              "2": "Payment is received and sufficiently confirmed."
+            },
+            "probabilities": {
+              "0": 0.111,
+              "1": 0.4795,
+              "2": 0.4096
+            },
+            "confidence": 0.502
+          },
+          "candidate": {
+            "type": "score",
+            "score": 1.2983,
+            "legend": {
+              "0": "Payment is missing or has a risk flag.",
+              "1": "Payment was received but still needs confirmations.",
+              "2": "Payment is received and sufficiently confirmed."
+            },
+            "probabilities": {
+              "0": 0.1106,
+              "1": 0.4804,
+              "2": 0.4089
+            },
+            "confidence": 0.5028
+          },
+          "max_probability_difference": 0.0009000000000000119,
+          "confidence_difference": 0.0008000000000000229,
+          "score_difference": 0.00029999999999996696
+        }
+      }
+    }
+  ]
+}

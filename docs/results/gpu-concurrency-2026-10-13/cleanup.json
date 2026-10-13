@@ -1,0 +1,14 @@
+{
+  "verified_at": "2026-10-13T08:27:41.491392+00:00",
+  "region": "us-east-1",
+  "checks": {
+    "temporary_instance_terminated": true,
+    "temporary_ebs_deleted": true,
+    "temporary_security_group_deleted": true,
+    "temporary_role_deleted": true,
+    "temporary_profile_deleted": true,
+    "temporary_bucket_deleted": true,
+    "original_production_gpu_still_running": true
+  },
+  "passed": true
+}

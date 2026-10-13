@@ -1,0 +1,60 @@
+{
+  "date": "2026-10-13",
+  "region": "us-east-1",
+  "instance_type": "g6.4xlarge",
+  "gpu": "NVIDIA L4",
+  "original_image": "632930644527.dkr.ecr.us-east-1.amazonaws.com/strands-decider-demo-model@sha256:104aadab321d8e8f4d9444d7b9b00668e6e0ba3934f0420fef07212886c0f450",
+  "vllm_base_digest": "sha256:c1c9f6fd5c109ba7f0546a59f5b2f15fb87f64c77782e90a27b648b42a8e67c3",
+  "candidate_image_id": "sha256:f198e395d2788aa0f6afdc90517bebb95b38eb8f51373de36a0982e7c7f47bcf",
+  "client_source_sha256": {
+    "pyproject.toml": "ee71061d3df86425dc4786cd6055017c34d8483e5d44bdb3daad0697cfd67fc8",
+    "Dockerfile": "7da6be1ccd2d3af573afd560e6d980023f5665bbb88f28b88b48677365509b2b",
+    "src/decider_vllm/__init__.py": "40b6b0c0f7464ed8d9d9cd5b28d38c09dfcc4479ffbc75c30ea01bfa5bccb34f",
+    "src/decider_vllm/artifacts.py": "239780f4f6cac749a983b6a38ba6c5d0998d3199d5492d33d36b1d812c00221d",
+    "src/decider_vllm/backend.py": "e585515e5c300cfbf28bf9baf5e1c0e1639386c984a46a7dcc388932869d3a53",
+    "src/decider_vllm/cli.py": "dd503f8362cedaec1e8b6337609c4bc80118b79dfc76ab09ad6952127cb452af",
+    "src/decider_vllm/evaluation.py": "697b304246fab4e79968aa84043addc4e510d25e96c4b2c54c00c4720cf1b724",
+    "src/decider_vllm/export.py": "1b54b5f5a1e7a547a3d0bc3f651074242ace0f84e258838965e6d4d272fe342d",
+    "src/decider_vllm/pointer.py": "a1a5408fbfe6fc9d76cc9c4725b8d99e702cc28e431dc32720aca1035bc94926",
+    "src/decider_vllm/preprocessing.py": "b48b5293912027b2336ce66deb506b506dcaadef58e82aaa89803bc0f601594e",
+    "src/decider_vllm/server.py": "a4631189ed137e90d71f071c072c41f264ed38935bdccf8d104efdbf76ff2611",
+    "src/decider_vllm/vllm_model.py": "9bb4a2cb53dc3cdce61cd42ed2959ec8b9a0477b8d5863a58438e986084de661",
+    "scripts/gpu_experiment.py": "948ad27669c1527c1e6005f938b79f74fbb81d77e821c20a66d77d715260d016",
+    "scripts/reference_server.py": "a378c4acc98e393966b106b14cc11cec2b402c7d3844d8d79c73c6e0b64a9a02",
+    "scripts/report_gpu_concurrency.py": "194de6a3359e6eeffe4845e477412ac0f7a57a5a25e8169103dd45c9bc8660ca",
+    "scripts/validate_local.py": "0199f089ecdee6e9b09674ba983381384611f085e6550f6b71a8e854d823b1f8",
+    "examples/README.md": "fdae1fa1b74a807c575683ce3abfa561776a3d45a2f91a7d1507b5e1355929b1",
+    "examples/payment-corpus.json": "55fb81ec8ad913195ef277388ca08f545f50cbb58f09544f17fec183937e00b7",
+    "examples/payment.json": "226e4f99241bfeff76d1ce0528e43016becb684159f44c6ecc183c2b04fb4c5c"
+  },
+  "model_export_manifest_sha256": "8b1f417277d08f374e4eab1b3cc8e3884439293ca3c84c6baf8a0a1688546922",
+  "measurement_scope": "localhost /v1/systemone; excludes startup, warmups, ECS API and public network",
+  "first_audit_correction": "Decimal tolerance boundary comparison only; threshold remains 0.02; two timeouts remain failures. Original audit retained.",
+  "inference_settings_changed_between_runs": false,
+  "reference_container": {
+    "CpusetCpus": "0-3",
+    "Memory": 15032385536,
+    "ShmSize": 2147483648,
+    "PortBindings": {
+      "8099/tcp": [
+        {
+          "HostIp": "127.0.0.1",
+          "HostPort": "8099"
+        }
+      ]
+    }
+  },
+  "vllm_container": {
+    "CpusetCpus": "0-3",
+    "Memory": 15032385536,
+    "ShmSize": 2147483648,
+    "PortBindings": {
+      "8100/tcp": [
+        {
+          "HostIp": "127.0.0.1",
+          "HostPort": "8100"
+        }
+      ]
+    }
+  }
+}

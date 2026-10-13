@@ -1,0 +1,30 @@
+{
+  "packages": {
+    "vllm": "0.31.0",
+    "torch": "2.13.0+cu130",
+    "transformers": "5.17.0",
+    "peft": "0.21.0",
+    "strands-decider": "0.0.0",
+    "strands-decider-vllm": "0.1.0"
+  },
+  "cuda": "13.0",
+  "gpu": "NVIDIA L4",
+  "torch_threads": 1,
+  "cpu_affinity": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "gpu_memory_utilization": 0.7,
+  "max_num_seqs": 32,
+  "max_num_batched_tokens": 8192,
+  "chunked_prefill": false,
+  "prefix_caching": false,
+  "enforce_eager": true,
+  "inference_memory_limit_gib": 14,
+  "instance_type": "g6.4xlarge",
+  "region": "us-east-1",
+  "reference_omp_threads": 4,
+  "candidate_omp_threads": 1
+}

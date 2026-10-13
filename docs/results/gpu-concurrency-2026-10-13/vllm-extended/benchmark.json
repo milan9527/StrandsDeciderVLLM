@@ -1,0 +1,65 @@
+{
+  "created_at": "2026-10-13T08:17:51.389055+00:00",
+  "url": "http://127.0.0.1:8100",
+  "method": "fixed workers, closed-loop HTTP load, nearest-rank success-only percentiles",
+  "warmups_excluded": 136,
+  "warmup_policy": "Before each level: max(corpus size, 2 * concurrency) requests at that concurrency",
+  "cells": [
+    {
+      "concurrency": 4,
+      "started_at": "2026-10-13T08:17:52.137289+00:00",
+      "finished_at": "2026-10-13T08:18:04.145231+00:00",
+      "warmups_excluded": 20,
+      "requests": 400,
+      "successes": 400,
+      "failures": 0,
+      "wall_seconds": 12.00784918699992,
+      "successful_rps": 33.31154428830208,
+      "mean_ms": 119.85195675750107,
+      "p50_ms": 119.90692800009128,
+      "p95_ms": 126.71156600003997
+    },
+    {
+      "concurrency": 8,
+      "started_at": "2026-10-13T08:18:04.730456+00:00",
+      "finished_at": "2026-10-13T08:18:16.182982+00:00",
+      "warmups_excluded": 20,
+      "requests": 400,
+      "successes": 400,
+      "failures": 0,
+      "wall_seconds": 11.452413202999878,
+      "successful_rps": 34.92713657024031,
+      "mean_ms": 228.52713359499376,
+      "p50_ms": 230.0518209999609,
+      "p95_ms": 233.24105100005
+    },
+    {
+      "concurrency": 16,
+      "started_at": "2026-10-13T08:18:17.261054+00:00",
+      "finished_at": "2026-10-13T08:18:30.503881+00:00",
+      "warmups_excluded": 32,
+      "requests": 400,
+      "successes": 400,
+      "failures": 0,
+      "wall_seconds": 13.242715461999978,
+      "successful_rps": 30.205285399946973,
+      "mean_ms": 528.2707089349975,
+      "p50_ms": 528.7662880000426,
+      "p95_ms": 542.8784740001902
+    },
+    {
+      "concurrency": 32,
+      "started_at": "2026-10-13T08:18:32.573384+00:00",
+      "finished_at": "2026-10-13T08:19:34.258053+00:00",
+      "warmups_excluded": 64,
+      "requests": 400,
+      "successes": 397,
+      "failures": 3,
+      "wall_seconds": 61.684541266999986,
+      "successful_rps": 6.435972317303868,
+      "mean_ms": 943.7268458438353,
+      "p50_ms": 940.685024000004,
+      "p95_ms": 1040.2505580000252
+    }
+  ]
+}

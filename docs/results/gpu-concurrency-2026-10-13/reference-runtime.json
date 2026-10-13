@@ -1,0 +1,9 @@
+{
+  "packages": {
+    "torch": "2.7.1+cu126",
+    "transformers": "5.17.0",
+    "peft": "0.21.0",
+    "strands-decider": "0.0.0"
+  },
+  "omp_num_threads": "4"
+}

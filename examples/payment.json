@@ -1,0 +1,34 @@
+{
+  "state": {
+    "case_type": "pending",
+    "expected_amount": "129.00",
+    "received_amount": "129.00",
+    "confirmations": 3,
+    "required_confirmations": 12,
+    "risk_flag": false
+  },
+  "questions": {
+    "action": {
+      "type": "choice",
+      "instructions": "Choose the next action. A deposit needs enough confirmations before crediting.",
+      "criteria": {
+        "await_confirmations": "Received amount is sufficient but confirmations are below the requirement.",
+        "credit_payment": "Received amount is sufficient and confirmations meet the requirement.",
+        "manual_review": "A risk flag is present."
+      }
+    },
+    "confirmed": {
+      "type": "noul",
+      "instructions": "The number of confirmations meets the required number."
+    },
+    "readiness": {
+      "type": "score",
+      "instructions": "Rate whether this payment can be credited now.",
+      "criteria": [
+        "Payment is missing or has a risk flag.",
+        "Payment was received but still needs confirmations.",
+        "Payment is received and sufficiently confirmed."
+      ]
+    }
+  }
+}
