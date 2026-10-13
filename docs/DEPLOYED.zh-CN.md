@@ -4,6 +4,8 @@
 
 **2026-10-13** 完成部署与验证，与原支付演示相互独立。
 
+当前限额已在 [1–128 容量测试](CONCURRENCY_128.zh-CN.md) 后提高。下文初次上线的验收数据保留当时的 8 请求配置和原始测量。
+
 - 服务地址：**https://d1e9udi8st2p3g.cloudfront.net**
 - 推理接口：`POST /v1/systemone`，需要 Bearer API Key。
 - [交互式文档](https://d1e9udi8st2p3g.cloudfront.net/docs) · [API 示例](API.zh-CN.md) · [运维说明](../deployment/README.zh-CN.md)
@@ -33,8 +35,8 @@ flowchart LR
 | 存储 | 加密 160 GiB gp3；停止再启动保留权重和缓存 |
 | 模型 | Decider v19；合并后的 BF16 底座与原始 FP32 Pointer Head |
 | 运行时 | vLLM `0.31.0`，一个 Uvicorn worker |
-| HTTP / 问题 / 引擎并发 | 8 / 8 / 8 |
-| 限流 | 共享每秒 20 请求令牌桶，突发容量 16 |
+| HTTP / 问题 / 引擎并发 | 256 / 256 / 128 |
+| 速率拒绝阈值 | 共享每秒 2000 请求令牌桶，突发容量 512；实际吞吐量低于该值 |
 | 上下文 / 批次 token 预算 | 每问题 4096 / 批次 8192 |
 | 推理超时 | 25 秒，另加取消清理时间 |
 | 运行方式 | 常驻；systemd 开机启动与健康恢复；单实例 |
@@ -42,7 +44,7 @@ flowchart LR
 
 CloudFront 禁用缓存并转发 Authorization。EC2 安全组只允许 CloudFront VPC 源站服务安全组访问 8100 端口，公网直连探测按预期失败。IMDSv2 必须启用，跳数限制为 1。S3 的所有公共访问阻止项均开启。Key 保存在 Secrets Manager 及被 Git 忽略、权限为 0600 的本地文件中。
 
-## 公网 HTTPS 验收
+## 初次上线的公网 HTTPS 验收
 
 客户端在部署工作机上通过实际公网 HTTPS 地址调用真实 GPU 模型。以下是包含网络开销的短时验收数据，不是持续吞吐基准，也不保证其他地区客户端有相同延迟。
 

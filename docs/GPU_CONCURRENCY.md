@@ -4,6 +4,8 @@ English | [简体中文](GPU_CONCURRENCY.zh-CN.md)
 
 This report preserves the original benchmark. A later [public API release](DEPLOYED.md) adds authentication, conservative admission limits, request tracing, and an HTTP disconnect-watcher fix, with separate HTTPS verification. Its measurements must not be combined with this benchmark.
 
+A subsequent [concurrency retest](CONCURRENCY_RETEST.md) completed 5,200 measured requests without failure, including concurrency 16 and 32. Higher concurrency still increased latency without improving throughput. That retest preserves this historical evidence unchanged.
+
 On 2026-10-13, we compared the original deployed Decider image with this project's vLLM adapter. Both used the same v19 model and inputs, with exclusive use of the same NVIDIA L4 GPU during their respective runs.
 
 **vLLM delivers measured concurrency gains. Start with concurrency 4–8 under the current settings.** At concurrency 8, throughput was about 2.36 times the original service's, and P95 latency fell by about 56%. Increasing concurrency to 16 or 32 did not improve throughput further. Five requests timed out after approximately 60 seconds across the higher-concurrency tests; their root cause remains unresolved.

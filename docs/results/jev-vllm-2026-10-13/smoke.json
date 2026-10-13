@@ -1,0 +1,56 @@
+[
+  {
+    "provider": "decider",
+    "status": 200,
+    "client_ms": 86.06,
+    "headers": {
+      "x-request-id": "ba94f55e174f4f399c42da5a6a16b61d",
+      "cache-control": "no-store"
+    },
+    "response": {
+      "model": "strands-decider-2B-hobson-v19-vllm",
+      "answers": {
+        "action": {
+          "type": "choice",
+          "choice": "payment_support",
+          "probabilities": {
+            "payment_support": 0.955,
+            "refund_support": 0.0177,
+            "merchant_ops": 0.0273
+          },
+          "confidence": 0.9326
+        }
+      },
+      "usage": {
+        "input_tokens": 328,
+        "output_tokens": 1
+      },
+      "latency_ms": 48.97
+    }
+  },
+  {
+    "provider": "jev",
+    "status": 200,
+    "client_ms": 131.13,
+    "headers": {},
+    "response": {
+      "model": "jev-1.13.0",
+      "answers": {
+        "action": {
+          "type": "choice",
+          "choice": "payment_support",
+          "confidence": 1.0,
+          "probabilities": {
+            "payment_support": 1.0,
+            "refund_support": 0.0,
+            "merchant_ops": 0.0
+          }
+        }
+      },
+      "usage": {
+        "input_tokens": 604,
+        "output_tokens": 42
+      }
+    }
+  }
+]

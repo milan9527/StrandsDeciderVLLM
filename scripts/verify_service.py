@@ -29,7 +29,10 @@ async def verify(args):
         base_url=url,
         timeout=40,
         trust_env=False,
-        limits=httpx.Limits(max_connections=64, max_keepalive_connections=64),
+        limits=httpx.Limits(
+            max_connections=max(64, args.overload_requests),
+            max_keepalive_connections=max(64, args.overload_requests),
+        ),
     ) as client:
         health = await client.get("/health")
         checks["health"] = health.status_code == 200 and health.json().get("status") == "ok"
@@ -100,7 +103,10 @@ async def verify(args):
         await asyncio.sleep(1)
         # Burst intentionally exceeds admission/rate limits; 429 is the expected response.
         await asyncio.gather(
-            *(infer(captures[index % 20], "overload", index) for index in range(64))
+            *(
+                infer(captures[index % 20], "overload", index)
+                for index in range(args.overload_requests)
+            )
         )
         await asyncio.sleep(1.2)
         # Eight simultaneous requests per batch, paced below the service's aggregate rate.
@@ -156,6 +162,7 @@ async def verify(args):
         "passed": all(checks.values()),
         "checks": checks,
         "phases": phases,
+        "overload_requests": args.overload_requests,
         "method": "Public HTTPS; 21 original-reference cases, overload burst, paced batches at concurrency 8",
     }
     encoded = json.dumps(report, indent=2)
@@ -177,7 +184,16 @@ def main():
         default=Path("docs/results/gpu-concurrency-2026-10-13/reference-capture.json"),
     )
     parser.add_argument("--output", type=Path, required=True)
-    asyncio.run(verify(parser.parse_args()))
+    parser.add_argument(
+        "--overload-requests",
+        type=int,
+        default=64,
+        help="Burst above the configured admission limit; use 512 for the expanded deployment",
+    )
+    args = parser.parse_args()
+    if args.overload_requests < 1:
+        parser.error("--overload-requests must be positive")
+    asyncio.run(verify(args))
 
 
 if __name__ == "__main__":

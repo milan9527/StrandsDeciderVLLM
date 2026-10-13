@@ -95,18 +95,18 @@ print("Request ID:", response.headers["x-request-id"])
 
 | Setting | Deployed value |
 |---|---:|
-| Concurrent HTTP inference requests | 8 |
-| Concurrent questions submitted to vLLM | 8 |
-| vLLM `max_num_seqs` | 8 |
+| Concurrent HTTP inference requests | 256 |
+| Concurrent questions submitted to vLLM | 256 |
+| vLLM `max_num_seqs` | 128 |
 | vLLM batch token budget | 8192 |
 | Context window per question | 4096 tokens; strict validation |
 | Questions per request | Up to 32; scheduled within the shared question limit |
 | Request body | 1 MiB |
-| Aggregate API rate | 1200 requests/minute, implemented as a 20 requests/second token bucket |
-| Initial / maximum burst | 16 requests |
+| Aggregate API rate | 120000 requests/minute, implemented as a 2000 requests/second token bucket |
+| Initial / maximum burst | 512 requests |
 | Inference deadline | 25 seconds, plus up to 2 seconds for cancellation cleanup |
 
-Authentication is checked before request-body buffering. A token bucket controls authenticated requests, and a separate admission limit bounds active inference requests. Multi-question requests share the eight-question engine limit.
+Authentication is checked before request-body buffering. Multi-question requests share 256 question slots, and vLLM schedules up to 128 sequences within its 8192-token batch budget. These are admission limits, not a throughput guarantee. The [1–128 capacity test](CONCURRENCY_128.md) measured about 30–34 successful requests/second at higher concurrency on its short inputs.
 
 | Status | Meaning | Client action |
 |---|---|---|
@@ -135,6 +135,6 @@ The instance accepts inference traffic only from the CloudFront VPC origin servi
 
 Systemd keeps the container running. Docker health checks and a systemd timer restart an unhealthy service. GPU, weights, and compilation caches remain available between requests; there is no idle shutdown. This is a single-GPU deployment without automatic horizontal scaling or multi-AZ failover.
 
-The deployment fixes a cancellation-wait race in the HTTP disconnect watcher and adds request correlation logs. Historical benchmark timeouts remain in the [benchmark evidence](GPU_CONCURRENCY.md); the old measurements are not rewritten. The deployed service uses the conservative concurrency limit of eight and is verified separately over public HTTPS.
+The deployment fixes a cancellation-wait race in the HTTP disconnect watcher and adds request correlation logs. Historical benchmark timeouts remain in the [benchmark evidence](GPU_CONCURRENCY.md); the old measurements are not rewritten. The later [1–128 test](CONCURRENCY_128.md) completed 12,800 requests without HTTP failures or changed candidate choices, while preserving one numeric-tolerance failure. Its expanded service settings are retained.
 
 See the [deployment guide](../deployment/README.md) for operations and the [live deployment record](DEPLOYED.md) for endpoint verification.

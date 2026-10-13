@@ -4,9 +4,17 @@ English | [简体中文](VALIDATION.zh-CN.md)
 
 ## Public API release
 
+The [direct Jev comparison](JEV_CONCURRENCY.md) adds 10,240 measured requests per service at concurrency 1–128, with Decider's batch budget fixed at 8192. Decider completed 10,239 requests and had one HTTP 502; 10,229 successful responses passed numeric parity. Ten confidence differences of 0.0202 exceeded 0.02 without changing candidate choices. Jev completed all 10,240 sweep requests and all 12,800 additional requests at concurrency 32/128. All 1,440 excluded warmups succeeded. The current GPU configuration remained unchanged and final authenticated inference passed.
+
+The [batch token experiment](BATCH_TOKENS.md) tested 8192, 16384, and 32768 with a fixed engine sequence limit of 128. All 23,040 measured requests and 1,948 excluded warmups succeeded; all measured candidate choices and numeric comparisons passed the unchanged 0.02 tolerance. Larger budgets did not improve throughput.
+
+The earlier [1–128 concurrency test](CONCURRENCY_128.md) completed 12,800/12,800 requests without HTTP failures or changed candidate choices. Numeric comparison passed for 12,799 requests; one confidence difference of 0.0202 exceeded the unchanged 0.02 threshold. Expanded service limits were retained, and authenticated public inference was verified afterward.
+
 The subsequent authenticated public deployment passed **33 local tests** (one GPU pytest test skipped on the CPU host) and **22 public HTTPS acceptance checks**. Real inference passed 21 parity requests containing 23 judgments and all 160 requests in paced batches at concurrency eight. A deliberate 64-request burst produced nine successes and 55 expected 429 responses, with no 5xx and normal capacity recovery. See the [deployment record](DEPLOYED.md) for the actual endpoint, configuration, latency, and raw evidence.
 
 The sections below preserve the earlier adapter and benchmark validation.
+
+The later [concurrency retest](CONCURRENCY_RETEST.md) adds 5,200 successful real-GPU requests, all passing the original behavior tolerance, plus 312 separately recorded warmup requests. It verifies the HTTP fix at higher load without modifying the earlier benchmark.
 
 Date: 2026-10-13. Local development used an aarch64 CPU host. GPU validation ran separately on an AWS g6.4xlarge with an NVIDIA L4, with the inference container limited to 4 vCPUs and 14 GiB RAM.
 

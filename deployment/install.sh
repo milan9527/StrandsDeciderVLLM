@@ -61,10 +61,10 @@ ExecStart=/usr/bin/docker run --name decider-vllm-service \
   --health-cmd="curl -fsS --max-time 4 http://127.0.0.1:8100/health >/dev/null" \
   --health-interval=30s --health-timeout=5s --health-retries=3 --health-start-period=600s \
   decider-vllm:service serve --model /models/decider-vllm --host 0.0.0.0 --port 8100 \
-  --max-num-seqs 8 --max-inflight-questions 8 --max-pending-requests 8 \
+  --max-num-seqs 128 --max-inflight-questions 256 --max-pending-requests 256 \
   --max-num-batched-tokens 8192 --gpu-memory-utilization 0.7 \
   --timeout-seconds 25 --api-key-file /run/secrets/api-key \
-  --requests-per-minute 1200 --rate-limit-burst 16
+  --requests-per-minute 120000 --rate-limit-burst 512
 ExecStop=/usr/bin/docker stop --time 30 decider-vllm-service
 Restart=always
 RestartSec=10

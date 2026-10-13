@@ -29,10 +29,13 @@ CloudFront VPC 源站异步部署。其状态变为 `Deployed` 后再次运行 `
 ```bash
 uv run --no-sync python scripts/verify_service.py \
   --credentials .deployment/api-credentials.json \
+  --overload-requests 512 \
   --output artifacts/public-api-verification
 ```
 
 每次使用新的输出目录。脚本检查鉴权、输入校验、请求体限制、HTTPS、原版模型结果对齐、过载处理和限速下的 8 并发批次，不能据此认定长时间负载下的 SLA。
+
+当前部署允许 256 个 HTTP 请求和 256 个问题，vLLM `max_num_seqs=128`，令牌桶每秒 2,000 次，突发容量 512。验证突发需超过准入容量才能检查 429。[1–128 容量报告](../docs/CONCURRENCY_128.zh-CN.md) 保留了实际吞吐和一项数值阈值失败；较高的速率配置是拒绝阈值，不代表 GPU 吞吐量。
 
 ## 运维
 

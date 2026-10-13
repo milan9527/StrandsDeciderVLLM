@@ -1,0 +1,87 @@
+{
+  "created_at": "2026-10-13T09:34:51.060804+00:00",
+  "endpoint": "https://d1e9udi8st2p3g.cloudfront.net",
+  "label": "engine-32-repeat",
+  "engine_max_num_seqs": 32,
+  "http_limit": 32,
+  "question_limit": 32,
+  "requests_per_minute": 12000,
+  "burst": 64,
+  "timeout_seconds": 25,
+  "client_timeout_seconds": 40,
+  "method": "Fixed workers, closed-loop public HTTPS; no retries; warmups excluded",
+  "warmup_policy": "max(corpus size, 2 * concurrency) before every level",
+  "percentiles": "Nearest-rank; successful responses only; failures included in elapsed time",
+  "tolerance": 0.02,
+  "cells": [
+    {
+      "concurrency": 8,
+      "started_at": "2026-10-13T09:34:51.717877+00:00",
+      "finished_at": "2026-10-13T09:35:15.763341+00:00",
+      "warmups_excluded": 20,
+      "requests": 800,
+      "successes": 800,
+      "failures": 0,
+      "status_counts": {
+        "200": 800
+      },
+      "wall_seconds": 24.008555431006243,
+      "successful_rps": 33.32145502460455,
+      "mean_ms": 239.73479165157187,
+      "p50_ms": 240.95727602252737,
+      "p95_ms": 245.92412801575847,
+      "p99_ms": 254.7799119784031,
+      "max_ms": 258.7319739977829,
+      "server_mean_ms": 228.06508750000026,
+      "server_p95_ms": 234.92,
+      "behavior_passed": 800,
+      "changed_choices": 0
+    },
+    {
+      "concurrency": 16,
+      "started_at": "2026-10-13T09:35:16.887294+00:00",
+      "finished_at": "2026-10-13T09:35:42.776210+00:00",
+      "warmups_excluded": 32,
+      "requests": 800,
+      "successes": 800,
+      "failures": 0,
+      "status_counts": {
+        "200": 800
+      },
+      "wall_seconds": 25.850476541992975,
+      "successful_rps": 30.947205120200966,
+      "mean_ms": 515.4165171079876,
+      "p50_ms": 515.5842899985146,
+      "p95_ms": 538.1568470038474,
+      "p99_ms": 571.3828379812185,
+      "max_ms": 576.9661820086185,
+      "server_mean_ms": 496.7517624999997,
+      "server_p95_ms": 518.95,
+      "behavior_passed": 800,
+      "changed_choices": 0
+    },
+    {
+      "concurrency": 32,
+      "started_at": "2026-10-13T09:35:44.903160+00:00",
+      "finished_at": "2026-10-13T09:36:11.203022+00:00",
+      "warmups_excluded": 64,
+      "requests": 800,
+      "successes": 800,
+      "failures": 0,
+      "status_counts": {
+        "200": 800
+      },
+      "wall_seconds": 26.259532677999232,
+      "successful_rps": 30.465127076319078,
+      "mean_ms": 1039.6990706257566,
+      "p50_ms": 1047.614684997825,
+      "p95_ms": 1062.788366980385,
+      "p99_ms": 1131.487204984296,
+      "max_ms": 1149.2204229871277,
+      "server_mean_ms": 1011.33725,
+      "server_p95_ms": 1040.98,
+      "behavior_passed": 800,
+      "changed_choices": 0
+    }
+  ]
+}

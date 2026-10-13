@@ -1,0 +1,64 @@
+{
+  "created_at": "2026-10-13T09:30:45.145370+00:00",
+  "endpoint": "https://d1e9udi8st2p3g.cloudfront.net",
+  "label": "engine-8",
+  "engine_max_num_seqs": 8,
+  "http_limit": 8,
+  "question_limit": 8,
+  "requests_per_minute": 12000,
+  "burst": 64,
+  "timeout_seconds": 25,
+  "client_timeout_seconds": 40,
+  "method": "Fixed workers, closed-loop public HTTPS; no retries; warmups excluded",
+  "warmup_policy": "max(corpus size, 2 * concurrency) before every level",
+  "percentiles": "Nearest-rank; successful responses only; failures included in elapsed time",
+  "tolerance": 0.02,
+  "cells": [
+    {
+      "concurrency": 1,
+      "started_at": "2026-10-13T09:30:46.374410+00:00",
+      "finished_at": "2026-10-13T09:31:08.122751+00:00",
+      "warmups_excluded": 20,
+      "requests": 400,
+      "successes": 400,
+      "failures": 0,
+      "status_counts": {
+        "200": 400
+      },
+      "wall_seconds": 21.7301277689985,
+      "successful_rps": 18.407623013181908,
+      "mean_ms": 54.197504869589466,
+      "p50_ms": 53.60719497548416,
+      "p95_ms": 58.39892497169785,
+      "p99_ms": 61.48123799357563,
+      "max_ms": 70.18470598268323,
+      "server_mean_ms": 46.215225000000025,
+      "server_p95_ms": 47.29,
+      "behavior_passed": 400,
+      "changed_choices": 0
+    },
+    {
+      "concurrency": 8,
+      "started_at": "2026-10-13T09:31:08.729902+00:00",
+      "finished_at": "2026-10-13T09:31:20.458539+00:00",
+      "warmups_excluded": 20,
+      "requests": 400,
+      "successes": 400,
+      "failures": 0,
+      "status_counts": {
+        "200": 400
+      },
+      "wall_seconds": 11.70968312700279,
+      "successful_rps": 34.15976296383214,
+      "mean_ms": 233.60365159496723,
+      "p50_ms": 234.58916702657007,
+      "p95_ms": 239.65807200875133,
+      "p99_ms": 247.9280249972362,
+      "max_ms": 249.96845901478082,
+      "server_mean_ms": 222.15397499999992,
+      "server_p95_ms": 228.41,
+      "behavior_passed": 400,
+      "changed_choices": 0
+    }
+  ]
+}

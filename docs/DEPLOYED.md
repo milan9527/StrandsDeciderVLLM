@@ -4,6 +4,8 @@ English | [简体中文](DEPLOYED.zh-CN.md)
 
 Deployed and verified on **2026-10-13**, independently of the original payment demo.
 
+The current limits were expanded after the [1–128 capacity test](CONCURRENCY_128.md). The initial launch acceptance results below retain their original eight-request configuration and measurements.
+
 - Service: **https://d1e9udi8st2p3g.cloudfront.net**
 - Inference: `POST /v1/systemone`, Bearer API key required.
 - [Interactive documentation](https://d1e9udi8st2p3g.cloudfront.net/docs) · [API examples](API.md) · [Operations](../deployment/README.md)
@@ -33,8 +35,8 @@ flowchart LR
 | Storage | Encrypted 160 GiB gp3; weights and caches persist on stop/start |
 | Model | Decider v19; merged BF16 backbone and original FP32 Pointer Head |
 | Runtime | vLLM `0.31.0`, one Uvicorn worker |
-| HTTP / question / engine concurrency | 8 / 8 / 8 |
-| Rate limit | Shared 20 requests/second token bucket, burst 16 |
+| HTTP / question / engine concurrency | 256 / 256 / 128 |
+| Rate-limit threshold | Shared 2000 requests/second token bucket, burst 512; actual throughput is lower |
 | Context / batch token budget | 4096 per question / 8192 |
 | Inference deadline | 25 seconds, plus cancellation cleanup |
 | Availability | Always on; systemd startup and health recovery; single instance |
@@ -42,7 +44,7 @@ flowchart LR
 
 CloudFront caching is disabled and Authorization is forwarded. The EC2 security group accepts port 8100 only from the CloudFront VPC origin service security group; direct public access failed the connection probe as expected. IMDSv2 is required with hop limit one. All S3 public-access blocks are enabled. The key lives in Secrets Manager and an ignored local file with mode 0600.
 
-## Public HTTPS acceptance results
+## Initial public HTTPS acceptance results
 
 The client ran on the deployment workstation, using the actual public HTTPS URL and real GPU inference. These are short acceptance measurements, including network overhead. They are not a sustained throughput benchmark or a latency guarantee for other client locations.
 

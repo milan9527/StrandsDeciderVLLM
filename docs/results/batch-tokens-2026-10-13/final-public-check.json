@@ -1,0 +1,13 @@
+{
+  "created_at": "2026-10-13T10:39:27.677342+00:00",
+  "passed": true,
+  "checks": {
+    "healthy": true,
+    "authentication_enforced": true,
+    "mixed_primitives_passed": true,
+    "no_response_cache": true,
+    "capacity_recovered": true
+  },
+  "latency_ms": 100.65,
+  "request_id": "525436b0c4084c3090bd4e195f45903f"
+}

@@ -14,7 +14,16 @@ The independent vLLM API runs continuously on an On-Demand EC2 `g6.xlarge` in `u
 - Inference: `POST /v1/systemone`, with a Bearer API key.
 - [Interactive API documentation](https://d1e9udi8st2p3g.cloudfront.net/docs) · [Examples and limits](docs/API.md) · [Deployment and operations](deployment/README.md) · [Verification](docs/DEPLOYED.md)
 
-CloudFront reaches the GPU through a private VPC origin. The service admits eight concurrent inference requests, returns 429 when overloaded, and keeps the model loaded between requests. Keys are distributed separately and are excluded from Git. This service is independent of the original payment demo.
+CloudFront reaches the GPU through a private VPC origin. HTTP/question admission is 256 and the vLLM engine limit is 128. The model stays loaded between requests. Keys are distributed separately and are excluded from Git.
+
+## Performance reports
+
+| Report | Coverage |
+| --- | --- |
+| [Decider vLLM concurrency and batch performance](docs/VLLM_PERFORMANCE.md) | Original service vs vLLM, concurrency 1–128, and token budgets 8192 / 16384 / 32768. Includes throughput, mean/P95/P99 latency, failures, and operating recommendations. |
+| [Decider vLLM vs Jev](docs/JEV_CONCURRENCY.md) | Same business inputs at concurrency 1–128, direct Jev API, longer repeats, token usage, result differences, and timing boundaries. |
+
+For these short inputs on a single L4, Decider vLLM throughput largely plateaued at concurrency 4–8; a larger token budget did not improve sustained throughput. In the direct comparison, Decider had lower latency at concurrency one, while Jev delivered higher throughput at concurrency 8–32. Higher concurrency increased latency for both services. The reports retain each run's errors and numeric differences.
 
 ## Features
 
@@ -24,8 +33,6 @@ CloudFront reaches the GPU through a private VPC origin. The service admits eigh
 - Score candidates on the GPU through a custom vLLM pooling model, returning only candidate probabilities from the pooler.
 - Allow concurrent HTTP requests to enter the vLLM scheduler, with candidate positions stored in each request's own metadata.
 - Provide admission limits, timeout cancellation, disconnect cleanup, health checks, behavior comparison, and concurrency benchmarks.
-
-**Real L4 GPU concurrency testing is complete.** On the same hardware, the vLLM repeat run reached **34.91 requests/second** at concurrency 8, compared with **14.76 requests/second** for the original service. P95 latency fell from **542.8 ms to 237.6 ms**. GPU behavior checks passed for 21 requests containing 23 judgments. Across three vLLM runs, 2,555 of 2,560 requests succeeded and selected the same candidates as the original; five requests timed out at higher concurrency. Concurrency levels 4 and 8 each completed 560 requests without failure, making them the recommended starting range. See the [GPU concurrency report](docs/GPU_CONCURRENCY.md) for data and limitations, and the [validation record](docs/VALIDATION.md) for automated checks.
 
 This initial version supports the current v19 Qwen3.5 text backbone, a single GPU, a BF16 backbone, and an FP32 Pointer Head. Dependencies are pinned to vLLM `0.31.0` and Strands Decider commit `63d24ae286e50105fba0bd1db15b0e243aea4650`.
 
@@ -78,9 +85,9 @@ docker run --rm --gpus all --shm-size=2g \
   strands-decider-vllm:0.1.0
 ```
 
-Defaults are `max_num_seqs=16`, `max_num_batched_tokens=8192`, and a GPU memory utilization fraction of `0.55`. These are initial settings, not a configuration tuned on g6.xlarge. When sharing a GPU, adjust them to the memory actually available.
+Local CLI/container defaults are `max_num_seqs=16`, `max_num_batched_tokens=8192`, and a GPU memory utilization fraction of `0.55`. When sharing a GPU, adjust them to the memory actually available.
 
-The benchmark used `max_num_seqs=32` and a memory fraction of `0.7` on a g6.4xlarge host, with the inference container limited to 4 vCPUs and 14 GiB RAM. Throughput was near its plateau at concurrency 4–8; increasing concurrency to 16 or 32 mainly increased queuing latency.
+The public deployment overrides these defaults: `g6.xlarge`, engine limit 128, HTTP/question limits 256, token budget 8192, and GPU memory fraction `0.7`. These capacity limits do not guarantee proportional throughput. The [performance summary](docs/VLLM_PERFORMANCE.md) separates the earlier g6.4xlarge baseline from the current g6.xlarge API tests.
 
 Alternatively, install directly on a Linux host with a compatible CUDA environment:
 
@@ -102,7 +109,7 @@ Local startup without `--api-key-file` disables authentication and should remain
 
 ## Validation and benchmarking
 
-Automated tests:
+Automated tests and their recorded results are described in the [validation record](docs/VALIDATION.md):
 
 ```bash
 uv run --no-sync pytest -q

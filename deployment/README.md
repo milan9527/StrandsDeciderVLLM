@@ -29,10 +29,13 @@ Verify the deployed endpoint:
 ```bash
 uv run --no-sync python scripts/verify_service.py \
   --credentials .deployment/api-credentials.json \
+  --overload-requests 512 \
   --output artifacts/public-api-verification
 ```
 
 Use a new output directory for each run. This checks authentication, schema validation, body limits, HTTPS, original-model parity, overload handling, and paced batches of eight concurrent requests. It does not establish a sustained-load SLA.
+
+The current deployment admits 256 HTTP requests and 256 questions, with vLLM `max_num_seqs=128`, a 2,000 requests/second token bucket, and burst 512. The verification burst must exceed admission capacity to test 429 responses. The [1–128 capacity report](../docs/CONCURRENCY_128.md) records actual throughput and one numeric-tolerance failure; the higher configured rate is a rejection threshold, not GPU throughput.
 
 ## Operate
 

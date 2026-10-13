@@ -14,7 +14,16 @@
 - 推理接口：`POST /v1/systemone`，使用 Bearer API Key 鉴权。
 - [交互式接口文档](https://d1e9udi8st2p3g.cloudfront.net/docs) · [示例与限制](docs/API.zh-CN.md) · [部署与运维](deployment/README.zh-CN.md) · [验证记录](docs/DEPLOYED.zh-CN.md)
 
-CloudFront 通过 VPC 源站私网访问 GPU。服务最多接收 8 个并发推理请求，过载返回 429，模型在请求之间持续驻留。Key 单独分发，不包含在 Git 中。此服务与原支付演示相互独立。
+CloudFront 通过 VPC 源站私网访问 GPU。HTTP / 问题准入为 256，vLLM 引擎上限为 128。模型在请求之间持续驻留，Key 单独分发，不包含在 Git 中。
+
+## 性能报告
+
+| 报告 | 内容 |
+| --- | --- |
+| [Decider vLLM 并发与批次性能总结](docs/VLLM_PERFORMANCE.zh-CN.md) | 原版与 vLLM 对比、1–128 并发、8192 / 16384 / 32768 token 预算。包含吞吐、平均/P95/P99 延迟、失败记录和配置建议。 |
+| [Decider vLLM vs Jev 性能对比](docs/JEV_CONCURRENCY.zh-CN.md) | 相同业务输入的 1–128 并发测试、Jev 直连接口、较长复测、token 用量、结果差异及计时范围。 |
+
+本批短输入在单张 L4 上，Decider vLLM 的吞吐在 4–8 并发附近基本进入平台，增大 token 预算未提高持续吞吐。直接对比中，Decider 在单并发时延迟更低，Jev 在 8–32 并发时吞吐更高；继续提高并发会增加两者延迟。各轮错误和数值差异均保留在报告中。
 
 ## 实现范围
 
@@ -24,8 +33,6 @@ CloudFront 通过 VPC 源站私网访问 GPU。服务最多接收 8 个并发推
 - 自定义 vLLM pooling 模型，在 GPU 内完成 Pointer Head 运算，只返回候选概率。
 - 不同 HTTP 请求可以同时进入 vLLM 调度器；候选位置保存在请求自己的 metadata 中。
 - 提供队列限制、超时取消、断连清理、健康检查、结果对齐及并发测试工具。
-
-**已完成真实 L4 GPU 并发测试。** 同一硬件上，并发 8 的 vLLM 复测吞吐量为 **34.91 次/秒**，原版为 **14.76 次/秒**；P95 从 **542.8 ms 降至 237.6 ms**。21 个请求、23 个判断通过 GPU 行为对齐。三轮 vLLM 共测 2560 次，2555 次成功且选择与原版相同，5 次高并发超时；并发 4、8 各累计 560 次均成功，建议先使用这个范围。完整数据和限制见 [GPU 并发报告](docs/GPU_CONCURRENCY.zh-CN.md)，自动化检查见 [验证记录](docs/VALIDATION.zh-CN.md)。
 
 首版只支持当前 v19 的 Qwen3.5 文本底座、单 GPU、BF16 底座及 FP32 Pointer Head。固定 vLLM `0.31.0` 和 Strands Decider 源码提交 `63d24ae286e50105fba0bd1db15b0e243aea4650`。
 
@@ -78,9 +85,9 @@ docker run --rm --gpus all --shm-size=2g \
   strands-decider-vllm:0.1.0
 ```
 
-默认 `max_num_seqs=16`、`max_num_batched_tokens=8192`、GPU 显存比例 `0.55`。这些是初始配置，尚未经过 g6.xlarge 性能调优；共享 GPU 时必须根据实际空闲显存调整。
+本地 CLI / 容器默认 `max_num_seqs=16`、`max_num_batched_tokens=8192`、GPU 显存比例 `0.55`。共享 GPU 时需要根据实际空闲显存调整。
 
-本次测试使用 `max_num_seqs=32`、显存比例 `0.7`，宿主机为 g6.4xlarge，推理容器限制 4 vCPU / 14 GiB。并发 4–8 已接近本次配置的吞吐平台，增加至 16、32 主要增加排队延迟。
+公网部署覆盖了这些默认值：`g6.xlarge`、引擎上限 128、HTTP / 问题上限 256、token 预算 8192、显存比例 `0.7`。容量上限不代表吞吐会等比例增长。[性能总结](docs/VLLM_PERFORMANCE.zh-CN.md) 分别列出早期 g6.4xlarge 基线与当前 g6.xlarge API 测试。
 
 也可以在具备兼容 CUDA 环境的 Linux 主机中安装：
 
@@ -102,7 +109,7 @@ curl -s http://127.0.0.1:8100/v1/systemone \
 
 ## 验证与压测
 
-自动化测试：
+自动化检查及其结果见 [验证记录](docs/VALIDATION.zh-CN.md)：
 
 ```bash
 uv run --no-sync pytest -q

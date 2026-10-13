@@ -1,0 +1,133 @@
+{
+  "created_at": "2026-10-13T09:33:33.177251+00:00",
+  "endpoint": "https://d1e9udi8st2p3g.cloudfront.net",
+  "label": "engine-32",
+  "engine_max_num_seqs": 32,
+  "http_limit": 32,
+  "question_limit": 32,
+  "requests_per_minute": 12000,
+  "burst": 64,
+  "timeout_seconds": 25,
+  "client_timeout_seconds": 40,
+  "method": "Fixed workers, closed-loop public HTTPS; no retries; warmups excluded",
+  "warmup_policy": "max(corpus size, 2 * concurrency) before every level",
+  "percentiles": "Nearest-rank; successful responses only; failures included in elapsed time",
+  "tolerance": 0.02,
+  "cells": [
+    {
+      "concurrency": 1,
+      "started_at": "2026-10-13T09:33:34.559670+00:00",
+      "finished_at": "2026-10-13T09:33:56.176097+00:00",
+      "warmups_excluded": 20,
+      "requests": 400,
+      "successes": 400,
+      "failures": 0,
+      "status_counts": {
+        "200": 400
+      },
+      "wall_seconds": 21.598289749003015,
+      "successful_rps": 18.519984899196203,
+      "mean_ms": 53.868791855857125,
+      "p50_ms": 53.30387901631184,
+      "p95_ms": 58.25460999039933,
+      "p99_ms": 60.98760099848732,
+      "max_ms": 80.693419004092,
+      "server_mean_ms": 46.614074999999985,
+      "server_p95_ms": 47.59,
+      "behavior_passed": 400,
+      "changed_choices": 0
+    },
+    {
+      "concurrency": 4,
+      "started_at": "2026-10-13T09:33:56.806933+00:00",
+      "finished_at": "2026-10-13T09:34:09.293817+00:00",
+      "warmups_excluded": 20,
+      "requests": 400,
+      "successes": 400,
+      "failures": 0,
+      "status_counts": {
+        "200": 400
+      },
+      "wall_seconds": 12.468329872004688,
+      "successful_rps": 32.0812814632155,
+      "mean_ms": 124.38302717775514,
+      "p50_ms": 123.5778050031513,
+      "p95_ms": 131.9760739861522,
+      "p99_ms": 134.1345620166976,
+      "max_ms": 141.61914700525813,
+      "server_mean_ms": 116.24122500000001,
+      "server_p95_ms": 124.02,
+      "behavior_passed": 400,
+      "changed_choices": 0
+    },
+    {
+      "concurrency": 8,
+      "started_at": "2026-10-13T09:34:09.903639+00:00",
+      "finished_at": "2026-10-13T09:34:21.020588+00:00",
+      "warmups_excluded": 20,
+      "requests": 400,
+      "successes": 400,
+      "failures": 0,
+      "status_counts": {
+        "200": 400
+      },
+      "wall_seconds": 11.097765421000076,
+      "successful_rps": 36.04329203454671,
+      "mean_ms": 220.68604517247877,
+      "p50_ms": 220.26001499034464,
+      "p95_ms": 228.4457510104403,
+      "p99_ms": 254.86979601555504,
+      "max_ms": 257.69358401885256,
+      "server_mean_ms": 210.61865000000006,
+      "server_p95_ms": 220.15,
+      "behavior_passed": 400,
+      "changed_choices": 0
+    },
+    {
+      "concurrency": 16,
+      "started_at": "2026-10-13T09:34:22.139871+00:00",
+      "finished_at": "2026-10-13T09:34:35.673274+00:00",
+      "warmups_excluded": 32,
+      "requests": 400,
+      "successes": 400,
+      "failures": 0,
+      "status_counts": {
+        "200": 400
+      },
+      "wall_seconds": 13.514058122003917,
+      "successful_rps": 29.5988071376362,
+      "mean_ms": 539.0280699304276,
+      "p50_ms": 539.6877239982132,
+      "p95_ms": 549.2135579988826,
+      "p99_ms": 559.4273619935848,
+      "max_ms": 562.7996560069732,
+      "server_mean_ms": 518.4279750000001,
+      "server_p95_ms": 533.32,
+      "behavior_passed": 400,
+      "changed_choices": 0
+    },
+    {
+      "concurrency": 32,
+      "started_at": "2026-10-13T09:34:37.815020+00:00",
+      "finished_at": "2026-10-13T09:34:50.859539+00:00",
+      "warmups_excluded": 64,
+      "requests": 400,
+      "successes": 400,
+      "failures": 0,
+      "status_counts": {
+        "200": 400
+      },
+      "wall_seconds": 13.024065755977063,
+      "successful_rps": 30.712375650931445,
+      "mean_ms": 1015.9086197816214,
+      "p50_ms": 1034.7310669894796,
+      "p95_ms": 1050.3488369868137,
+      "p99_ms": 1130.9146450075787,
+      "max_ms": 1136.9116510031745,
+      "server_mean_ms": 987.0314750000002,
+      "server_p95_ms": 1029.99,
+      "behavior_passed": 400,
+      "changed_choices": 0
+    }
+  ]
+}

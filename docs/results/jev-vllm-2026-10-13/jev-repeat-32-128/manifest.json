@@ -1,0 +1,296 @@
+{
+  "started_at": "2026-10-13T11:11:27.580176+00:00",
+  "endpoints": {
+    "decider": "https://d1e9udi8st2p3g.cloudfront.net/v1/systemone",
+    "jev": "https://api.typesafe.ai/v1/systemone"
+  },
+  "jev_requested_model": "jev-latest",
+  "decider_expected_config": {
+    "max_num_batched_tokens": 8192,
+    "max_num_seqs": 128,
+    "max_inflight_questions": 256,
+    "max_pending_requests": 256,
+    "requests_per_minute": 120000,
+    "rate_limit_burst": 512,
+    "server_timeout_seconds": 25
+  },
+  "design": {
+    "providers": [
+      "jev"
+    ],
+    "levels": [
+      32,
+      128
+    ],
+    "requests_per_cell": 6400,
+    "cases": 20,
+    "repeats_per_case": 320,
+    "corpus_sha256": "55fb81ec8ad913195ef277388ca08f545f50cbb58f09544f17fec183937e00b7",
+    "reference_sha256": "b68548a3359d87cf62b2717f1375d87d41247b8cb9c91eefaf58b10ab834c427",
+    "method": "Fixed workers; closed loop; immediate replacement; no client retries",
+    "provider_order": "Sequential providers; alternate first provider at each level",
+    "dispatch_order": "Round-robin corpus index; identical at each provider and level",
+    "warmup": "max(corpus size, 2 * concurrency) before each cell; excluded",
+    "transport": "Same client host; HTTPS/HTTP1.1; persistent pools; no redirects",
+    "timeout_seconds": 40,
+    "connect_timeout_seconds": 8,
+    "percentiles": "Nearest rank; success-only; failures also retained separately",
+    "stop_policy": "Stop new submissions and higher levels for a provider on any HTTP 400/401/403/413/422/429, or five other failures in one phase. Existing in-flight calls finish; no retries or quota bypass.",
+    "comparison_scope": "Public API performance, not pure model compute. Jev bypasses the demo ECS and Lambda bridge. Provider infrastructure and network paths differ."
+  },
+  "client": {
+    "python": "3.11.14",
+    "architecture": "aarch64"
+  },
+  "cells": [
+    {
+      "provider": "jev",
+      "concurrency": 32,
+      "started_at": "2026-10-13T11:11:28.048156+00:00",
+      "finished_at": "2026-10-13T11:11:54.148689+00:00",
+      "warmups": 64,
+      "warmup_failures": 0,
+      "planned_requests": 6400,
+      "attempts": 6400,
+      "successes": 6400,
+      "failures": 0,
+      "complete": true,
+      "wall_seconds": 26.100529351009754,
+      "successful_rps": 245.20575479257099,
+      "status_counts": {
+        "200": 6400
+      },
+      "latency_ms": {
+        "n": 6400,
+        "mean": 129.864685261864,
+        "p50": 122.3510609997902,
+        "p95": 174.77899199002422,
+        "p99": 233.75466102152131,
+        "min": 101.52897200896405,
+        "max": 455.71533901966177
+      },
+      "failure_latency_ms": null,
+      "all_latency_ms": {
+        "n": 6400,
+        "mean": 129.864685261864,
+        "p50": 122.3510609997902,
+        "p95": 174.77899199002422,
+        "p99": 233.75466102152131,
+        "min": 101.52897200896405,
+        "max": 455.71533901966177
+      },
+      "server_latency_ms": null,
+      "models": {
+        "jev-1.13.0": 6400
+      },
+      "input_tokens": {
+        "n": 6400,
+        "mean": 656.95,
+        "p50": 654,
+        "p95": 737,
+        "p99": 744,
+        "min": 575,
+        "max": 744
+      },
+      "output_tokens": {
+        "n": 6400,
+        "mean": 54.95,
+        "p50": 50,
+        "p95": 75,
+        "p99": 79,
+        "min": 33,
+        "max": 79
+      },
+      "choices": {
+        "pending/verify": {
+          "await_confirmations": 320
+        },
+        "pending/intake": {
+          "payment_support": 320
+        },
+        "underpaid/approve": {
+          "approved": 320
+        },
+        "pending/execute": {
+          "hold": 320
+        },
+        "refund/approve": {
+          "verify_destination": 320
+        },
+        "underpaid/verify": {
+          "request_topup": 320
+        },
+        "settlement/approve": {
+          "approved": 320
+        },
+        "pending/approve": {
+          "approved": 320
+        },
+        "settlement/verify": {
+          "settlement_delayed": 320
+        },
+        "pending/close": {
+          "follow_up": 320
+        },
+        "underpaid/intake": {
+          "payment_support": 320
+        },
+        "refund/verify": {
+          "payment_verified": 320
+        },
+        "refund/execute": {
+          "hold": 320
+        },
+        "underpaid/execute": {
+          "hold": 320
+        },
+        "underpaid/close": {
+          "follow_up": 320
+        },
+        "settlement/execute": {
+          "escalate_settlement": 320
+        },
+        "settlement/close": {
+          "follow_up": 320
+        },
+        "refund/close": {
+          "follow_up": 320
+        },
+        "refund/intake": {
+          "refund_support": 320
+        },
+        "settlement/intake": {
+          "merchant_ops": 320
+        }
+      },
+      "choices_matching_own_initial_warmup": 6400,
+      "decider_numeric_parity_passed": null
+    },
+    {
+      "provider": "jev",
+      "concurrency": 128,
+      "started_at": "2026-10-13T11:11:57.674945+00:00",
+      "finished_at": "2026-10-13T11:13:59.561617+00:00",
+      "warmups": 256,
+      "warmup_failures": 0,
+      "planned_requests": 6400,
+      "attempts": 6400,
+      "successes": 6400,
+      "failures": 0,
+      "complete": true,
+      "wall_seconds": 121.88666960300179,
+      "successful_rps": 52.50779286074104,
+      "status_counts": {
+        "200": 6400
+      },
+      "latency_ms": {
+        "n": 6400,
+        "mean": 2412.9175061832366,
+        "p50": 1596.0356379800942,
+        "p95": 7307.309352996526,
+        "p99": 11280.39363498101,
+        "min": 142.28784199804068,
+        "max": 19584.31709901197
+      },
+      "failure_latency_ms": null,
+      "all_latency_ms": {
+        "n": 6400,
+        "mean": 2412.9175061832366,
+        "p50": 1596.0356379800942,
+        "p95": 7307.309352996526,
+        "p99": 11280.39363498101,
+        "min": 142.28784199804068,
+        "max": 19584.31709901197
+      },
+      "server_latency_ms": null,
+      "models": {
+        "jev-1.13.0": 6400
+      },
+      "input_tokens": {
+        "n": 6400,
+        "mean": 656.95,
+        "p50": 654,
+        "p95": 737,
+        "p99": 744,
+        "min": 575,
+        "max": 744
+      },
+      "output_tokens": {
+        "n": 6400,
+        "mean": 54.95,
+        "p50": 50,
+        "p95": 75,
+        "p99": 79,
+        "min": 33,
+        "max": 79
+      },
+      "choices": {
+        "pending/intake": {
+          "payment_support": 320
+        },
+        "pending/verify": {
+          "await_confirmations": 320
+        },
+        "pending/close": {
+          "follow_up": 320
+        },
+        "underpaid/approve": {
+          "approved": 320
+        },
+        "pending/execute": {
+          "hold": 320
+        },
+        "settlement/approve": {
+          "approved": 320
+        },
+        "underpaid/verify": {
+          "request_topup": 320
+        },
+        "pending/approve": {
+          "approved": 320
+        },
+        "refund/intake": {
+          "refund_support": 320
+        },
+        "settlement/verify": {
+          "settlement_delayed": 320
+        },
+        "refund/approve": {
+          "verify_destination": 320
+        },
+        "settlement/close": {
+          "follow_up": 320
+        },
+        "underpaid/execute": {
+          "hold": 320
+        },
+        "settlement/intake": {
+          "merchant_ops": 320
+        },
+        "refund/close": {
+          "follow_up": 320
+        },
+        "underpaid/intake": {
+          "payment_support": 320
+        },
+        "settlement/execute": {
+          "escalate_settlement": 320
+        },
+        "refund/verify": {
+          "payment_verified": 320
+        },
+        "underpaid/close": {
+          "follow_up": 320
+        },
+        "refund/execute": {
+          "hold": 320
+        }
+      },
+      "choices_matching_own_initial_warmup": 6400,
+      "decider_numeric_parity_passed": null
+    }
+  ],
+  "skipped": [],
+  "provider_stop_reasons": {},
+  "finished_at": "2026-10-13T11:13:59.654136+00:00"
+}
